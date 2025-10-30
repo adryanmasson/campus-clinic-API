@@ -2,16 +2,21 @@ package com.example.clinica.services;
 
 import com.example.clinica.models.Paciente;
 import com.example.clinica.repositories.PacienteRepository;
+import com.example.clinica.repositories.ConsultaRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PacienteService {
-    private final PacienteRepository pacienteRepository;
 
-    public PacienteService(PacienteRepository pacienteRepository) {
+    private final PacienteRepository pacienteRepository;
+    private final ConsultaRepository consultaRepository;
+
+    public PacienteService(PacienteRepository pacienteRepository, ConsultaRepository consultaRepository) {
         this.pacienteRepository = pacienteRepository;
+        this.consultaRepository = consultaRepository;
     }
 
     public List<Paciente> listarPacientes() {
@@ -19,11 +24,42 @@ public class PacienteService {
     }
 
     public Paciente buscarPacientePorId(Integer id) {
-        Optional<Paciente> paciente = pacienteRepository.findById(id);
-        if (paciente.isPresent()) {
-            return paciente.get();
-        } else {
-            throw new RuntimeException("Paciente não encontrado com id: " + id);
+        return pacienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado com ID: " + id));
+    }
+
+    public Paciente criarPaciente(Paciente paciente) {
+        Optional<Paciente> pacienteExistente = pacienteRepository.findByCpf(paciente.getCpf());
+        if (pacienteExistente.isPresent()) {
+            throw new RuntimeException("Já existe paciente com esse CPF: " + paciente.getCpf());
         }
+        return pacienteRepository.save(paciente);
+    }
+
+    public Paciente atualizarPaciente(Integer id, Paciente dadosAtualizados) {
+        Paciente paciente = buscarPacientePorId(id);
+
+        if (dadosAtualizados.getTelefone() != null) {
+            paciente.setTelefone(dadosAtualizados.getTelefone());
+        }
+        if (dadosAtualizados.getEmail() != null) {
+            paciente.setEmail(dadosAtualizados.getEmail());
+        }
+        if (dadosAtualizados.getLogradouro() != null) {
+            paciente.setLogradouro(dadosAtualizados.getLogradouro());
+        }
+
+        return pacienteRepository.save(paciente);
+    }
+
+    public void excluirPaciente(Integer id) {
+        Paciente paciente = buscarPacientePorId(id);
+
+        // Checa se existem consultas associadas
+        if (!consultaRepository.findByPacienteId(id).isEmpty()) {
+            throw new RuntimeException("Não é possível excluir paciente com consultas associadas.");
+        }
+
+        pacienteRepository.delete(paciente);
     }
 }
