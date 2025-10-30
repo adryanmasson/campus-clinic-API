@@ -4,9 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -19,11 +21,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        RequestMatcher h2Matcher = new AntPathRequestMatcher("/h2-console/**");
+        RequestMatcher apiMatcher = new AntPathRequestMatcher("/api/**");
+
         http
-                .csrf().disable() // desativa CSRF para testes (em produção: cuidado!)
-                .authorizeRequests()
-                .requestMatchers("/api/**").permitAll() // Libera o endpoint de login
-                .anyRequest().authenticated(); // Bloqueia o restante (ajustável depois)
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(h2Matcher).permitAll()
+                        .requestMatchers(apiMatcher).permitAll()
+                        .anyRequest().authenticated())
+                .headers(headers -> headers.frameOptions().disable());
 
         return http.build();
     }
