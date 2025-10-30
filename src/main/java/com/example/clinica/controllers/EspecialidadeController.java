@@ -32,4 +32,28 @@ public class EspecialidadeController {
         ApiResponse<Especialidade> body = ApiResponse.sucesso("Especialidade encontrada com sucesso.", especialidade);
         return ResponseEntity.ok(body);
     }
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<Especialidade>> criarEspecialidade(@RequestBody Especialidade especialidade) {
+        Especialidade criado = especialidadeService.criarEspecialidade(especialidade);
+        ApiResponse<Especialidade> body = ApiResponse.sucesso("Especialidade criada com sucesso.", criado);
+        return ResponseEntity.status(201).body(body);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Especialidade>> atualizarEspecialidade(
+            @PathVariable Integer id,
+            @RequestBody Especialidade especialidadeAtualizada) {
+        Especialidade atualizado = especialidadeService.atualizarEspecialidade(id, especialidadeAtualizada);
+        ApiResponse<Especialidade> body = ApiResponse.sucesso("Especialidade atualizada com sucesso.", atualizado);
+        return ResponseEntity.ok(body);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> excluirEspecialidade(@PathVariable Integer id) {
+        especialidadeService.excluirEspecialidade(id);
+        ApiResponse<Void> body = ApiResponse.sucesso("Especialidade excluída com sucesso.", null);
+        return ResponseEntity.ok(body);
+    }
+
 }

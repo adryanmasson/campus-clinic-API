@@ -51,7 +51,7 @@ public class PacienteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> excluirPaciente(@PathVariable Integer id) {
         pacienteService.excluirPaciente(id);
-        ApiResponse<Void> body = ApiResponse.sucesso("Paciente excluído com sucesso.");
+        ApiResponse<Void> body = ApiResponse.sucesso("Paciente excluído com sucesso.", null);
         return ResponseEntity.ok(body);
     }
 

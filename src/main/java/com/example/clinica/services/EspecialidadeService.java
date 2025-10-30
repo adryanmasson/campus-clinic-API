@@ -24,4 +24,21 @@ public class EspecialidadeService {
         return especialidadeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Especialidade não encontrada com id " + id));
     }
+
+    public Especialidade criarEspecialidade(Especialidade especialidade) {
+        return especialidadeRepository.save(especialidade);
+    }
+
+    public Especialidade atualizarEspecialidade(Integer id, Especialidade especialidadeAtualizada) {
+        Especialidade existente = buscarEspecialidadePorId(id);
+        existente.setNome(especialidadeAtualizada.getNome());
+        existente.setDescricao(especialidadeAtualizada.getDescricao());
+        return especialidadeRepository.save(existente);
+    }
+
+    public void excluirEspecialidade(Integer id) {
+        Especialidade existente = buscarEspecialidadePorId(id);
+        especialidadeRepository.delete(existente);
+    }
+
 }

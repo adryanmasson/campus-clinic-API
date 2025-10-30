@@ -53,7 +53,7 @@ public class PacienteService {
         return pacienteRepository.save(paciente);
     }
 
-    public String excluirPaciente(Integer id) {
+    public void excluirPaciente(Integer id) {
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado."));
 
@@ -63,7 +63,6 @@ public class PacienteService {
         }
 
         pacienteRepository.delete(paciente);
-        return "Paciente excluído com sucesso.";
     }
 
     public Integer calcularIdadePaciente(Integer idPaciente) {
