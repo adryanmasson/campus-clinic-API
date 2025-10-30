@@ -10,13 +10,10 @@ public class Especialidade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_especialidade")
     private Integer id_especialidade;
 
-    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "descricao", columnDefinition = "text")
     private String descricao;
 
     public Especialidade() {

@@ -10,23 +10,19 @@ public class Consulta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_consulta")
     private Integer id_consulta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_id_paciente", nullable = false)
+    @JoinColumn(name = "fk_id_paciente")
     private Paciente paciente;
 
-    @Column(name = "fk_id_medico", nullable = false)
+    @Column(name = "fk_id_medico")
     private Integer fkIdMedico;
 
-    @Column(name = "data_consulta", nullable = false)
     private LocalDate data_consulta;
 
-    @Column(name = "hora_inicio", nullable = false)
     private LocalTime hora_inicio;
 
-    @Column(name = "hora_fim", nullable = false)
     private LocalTime hora_fim;
 
     @Enumerated(EnumType.STRING)

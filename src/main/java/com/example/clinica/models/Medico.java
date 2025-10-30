@@ -9,26 +9,20 @@ public class Medico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_medico")
     private Integer id_medico;
 
-    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name = "crm", nullable = false, length = 20, unique = true)
     private String crm;
 
     @ManyToOne
-    @JoinColumn(name = "fk_id_especialidade", nullable = false)
+    @JoinColumn(name = "fk_id_especialidade")
     private Especialidade especialidade;
 
-    @Column(name = "data_nascimento", nullable = false)
     private LocalDate data_nascimento;
 
-    @Column(name = "telefone", length = 17)
     private String telefone;
 
-    @Column(name = "ativo", nullable = false)
     private Boolean ativo = true;
 
     public Integer getId_medico() {

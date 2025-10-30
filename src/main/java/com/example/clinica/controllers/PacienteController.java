@@ -19,13 +19,17 @@ public class PacienteController {
     }
 
     @GetMapping
-    public List<Paciente> listarPacientes() {
-        return pacienteService.listarPacientes();
+    public ResponseEntity<ApiResponse<List<Paciente>>> listarPacientes() {
+        List<Paciente> pacientes = pacienteService.listarPacientes();
+        ApiResponse<List<Paciente>> body = ApiResponse.sucesso("Pacientes listados com sucesso.", pacientes);
+        return ResponseEntity.ok(body);
     }
 
     @GetMapping("/{id}")
-    public Paciente buscarPacientePorId(@PathVariable Integer id) {
-        return pacienteService.buscarPacientePorId(id);
+    public ResponseEntity<ApiResponse<Paciente>> buscarPacientePorId(@PathVariable Integer id) {
+        Paciente paciente = pacienteService.buscarPacientePorId(id);
+        ApiResponse<Paciente> body = ApiResponse.sucesso("Paciente encontrado com sucesso.", paciente);
+        return ResponseEntity.ok(body);
     }
 
     @PostMapping
