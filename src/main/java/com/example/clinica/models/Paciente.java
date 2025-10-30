@@ -23,7 +23,6 @@ public class Paciente {
     private String logradouro;
     private String email;
 
-    // getters e setters
     public Integer getId_paciente() {
         return id_paciente;
     }

@@ -6,7 +6,10 @@ import com.example.clinica.services.MedicoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/medicos")
@@ -46,6 +49,32 @@ public class MedicoController {
         Medico atualizado = medicoService.atualizarMedico(id, medicoAtualizado);
         ApiResponse<Medico> body = ApiResponse.sucesso("Médico atualizado com sucesso.", atualizado);
         return ResponseEntity.ok(body);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> excluirMedico(@PathVariable Integer id) {
+        medicoService.excluirMedico(id);
+        ApiResponse<Void> body = ApiResponse.sucesso("Médico excluído com sucesso.", null);
+        return ResponseEntity.ok(body);
+    }
+
+    @GetMapping("/especialidade/{id}")
+    public ResponseEntity<?> listarMedicosPorEspecialidade(@PathVariable("id") Integer idEspecialidade) {
+        List<Medico> medicos = medicoService.listarPorEspecialidade(idEspecialidade);
+
+        if (medicos.isEmpty()) {
+            Map<String, Object> resposta = new HashMap<>();
+            resposta.put("status", "vazio");
+            resposta.put("mensagem", "Não há médicos cadastrados para essa especialidade.");
+            resposta.put("data", Collections.emptyList());
+            return ResponseEntity.ok(resposta);
+        }
+
+        Map<String, Object> resposta = new HashMap<>();
+        resposta.put("status", "sucesso");
+        resposta.put("mensagem", "Médicos encontrados.");
+        resposta.put("data", medicos);
+        return ResponseEntity.ok(resposta);
     }
 
 }

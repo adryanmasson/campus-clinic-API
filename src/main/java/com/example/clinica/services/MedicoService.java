@@ -1,8 +1,10 @@
 package com.example.clinica.services;
 
 import com.example.clinica.models.Medico;
+import com.example.clinica.models.ConsultaStatus;
 import com.example.clinica.models.Especialidade;
 import com.example.clinica.repositories.MedicoRepository;
+import com.example.clinica.repositories.ConsultaRepository;
 import com.example.clinica.repositories.EspecialidadeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +16,13 @@ public class MedicoService {
 
     private final MedicoRepository medicoRepository;
     private final EspecialidadeRepository especialidadeRepository;
+    private final ConsultaRepository consultaRepository;
 
-    public MedicoService(MedicoRepository medicoRepository, EspecialidadeRepository especialidadeRepository) {
+    public MedicoService(MedicoRepository medicoRepository, EspecialidadeRepository especialidadeRepository,
+            ConsultaRepository consultaRepository) {
         this.medicoRepository = medicoRepository;
         this.especialidadeRepository = especialidadeRepository;
+        this.consultaRepository = consultaRepository;
     }
 
     public List<Medico> listarMedicos() {
@@ -70,6 +75,24 @@ public class MedicoService {
         medicoExistente.setAtivo(medicoAtualizado.getAtivo());
 
         return medicoRepository.save(medicoExistente);
+    }
+
+    @Transactional
+    public void excluirMedico(Integer id) {
+        Medico medico = medicoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Médico não encontrado"));
+
+        boolean temConsultasAgendadas = consultaRepository.existsByFkIdMedicoAndStatus(id, ConsultaStatus.AGENDADA);
+
+        if (temConsultasAgendadas) {
+            throw new RuntimeException("Não é possível excluir o médico, pois ele possui consultas agendadas.");
+        }
+
+        medicoRepository.delete(medico);
+    }
+
+    public List<Medico> listarPorEspecialidade(Integer idEspecialidade) {
+        return medicoRepository.findByEspecialidadeIdEspecialidade(idEspecialidade);
     }
 
 }
