@@ -59,22 +59,15 @@ public class MedicoController {
     }
 
     @GetMapping("/especialidade/{id}")
-    public ResponseEntity<?> listarMedicosPorEspecialidade(@PathVariable("id") Integer idEspecialidade) {
+    public ResponseEntity<ApiResponse<List<Medico>>> listarMedicosPorEspecialidade(
+            @PathVariable("id") Integer idEspecialidade) {
         List<Medico> medicos = medicoService.listarPorEspecialidade(idEspecialidade);
 
-        if (medicos.isEmpty()) {
-            Map<String, Object> resposta = new HashMap<>();
-            resposta.put("status", "vazio");
-            resposta.put("mensagem", "Não há médicos cadastrados para essa especialidade.");
-            resposta.put("data", Collections.emptyList());
-            return ResponseEntity.ok(resposta);
-        }
+        String mensagem = medicos.isEmpty()
+                ? "Não há médicos cadastrados para essa especialidade."
+                : "Médicos encontrados.";
 
-        Map<String, Object> resposta = new HashMap<>();
-        resposta.put("status", "sucesso");
-        resposta.put("mensagem", "Médicos encontrados.");
-        resposta.put("data", medicos);
-        return ResponseEntity.ok(resposta);
+        return ResponseEntity.ok(ApiResponse.sucesso(mensagem, medicos));
     }
 
 }
