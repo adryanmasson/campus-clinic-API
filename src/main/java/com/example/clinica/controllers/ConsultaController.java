@@ -65,4 +65,26 @@ public class ConsultaController {
         return ResponseEntity.ok(ApiResponse.sucesso("Consulta cancelada com sucesso", consultaCancelada));
     }
 
+    @GetMapping("/paciente/{id}")
+    public ResponseEntity<ApiResponse<List<ConsultaDTO>>> listarPorPaciente(@PathVariable Integer id) {
+        List<ConsultaDTO> consultas = consultaService.listarConsultasPorPaciente(id);
+
+        String mensagem = consultas.isEmpty()
+                ? "Nenhuma consulta encontrada para o paciente."
+                : "Consultas do paciente retornadas com sucesso.";
+
+        return ResponseEntity.ok(ApiResponse.sucesso(mensagem, consultas));
+    }
+
+    @GetMapping("/medico/{id}")
+    public ResponseEntity<ApiResponse<List<ConsultaDTO>>> listarPorMedico(@PathVariable Integer id) {
+        List<ConsultaDTO> consultas = consultaService.listarConsultasPorMedico(id);
+
+        String mensagem = consultas.isEmpty()
+                ? "Nenhuma consulta encontrada para o médico."
+                : "Consultas do médico retornadas com sucesso.";
+
+        return ResponseEntity.ok(ApiResponse.sucesso(mensagem, consultas));
+    }
+
 }

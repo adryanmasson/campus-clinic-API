@@ -15,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -186,4 +188,49 @@ public class ConsultaService {
                                 proj.getStatus());
         }
 
+        @Transactional(readOnly = true)
+        public List<ConsultaDTO> listarConsultasPorPaciente(Integer idPaciente) {
+                List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
+
+                if (consultas.isEmpty()) {
+                        return Collections.emptyList();
+                }
+
+                return consultas.stream().map(c -> {
+                        String nomePaciente = null;
+                        if (c.getPaciente() != null) {
+                                nomePaciente = c.getPaciente().getNome();
+                        }
+
+                        String nomeMedico = null;
+                        if (c.getFkIdMedico() != null) {
+                                nomeMedico = medicoRepository.findById(c.getFkIdMedico())
+                                                .map(Medico::getNome)
+                                                .orElse(null);
+                        }
+
+                        return new ConsultaDTO(
+                                        c.getId_consulta(),
+                                        nomePaciente,
+                                        nomeMedico,
+                                        c.getData_consulta(),
+                                        c.getHora_inicio(),
+                                        c.getHora_fim(),
+                                        c.getStatus() != null ? c.getStatus().name() : null);
+                }).collect(Collectors.toList());
+        }
+
+        @Transactional(readOnly = true)
+        public List<ConsultaDTO> listarConsultasPorMedico(Integer idMedico) {
+                List<Map<String, Object>> consultas = consultaRepository.buscarConsultasPorMedico(idMedico);
+
+                return consultas.stream().map(c -> new ConsultaDTO(
+                                (Integer) c.get("id"),
+                                (String) c.get("nome_paciente"),
+                                (String) c.get("nome_medico"),
+                                ((java.sql.Date) c.get("data_consulta")).toLocalDate(),
+                                ((java.sql.Time) c.get("hora_inicio")).toLocalTime(),
+                                ((java.sql.Time) c.get("hora_fim")).toLocalTime(),
+                                String.valueOf(c.get("status")))).toList();
+        }
 }

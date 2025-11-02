@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
@@ -61,5 +62,13 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
       "INNER JOIN medicos m ON m.id_medico = c.fk_id_medico " +
       "WHERE c.id_consulta = :id", nativeQuery = true)
   ConsultaDetalhadaProjection buscarConsultaDetalhada(@Param("id") Integer id);
+
+  @Query(value = "SELECT c.id_consulta AS id, c.data_consulta, c.hora_inicio, c.hora_fim, c.status, " +
+      "p.nome AS nome_paciente, m.nome AS nome_medico " +
+      "FROM consultas c " +
+      "INNER JOIN pacientes p ON p.id_paciente = c.fk_id_paciente " +
+      "INNER JOIN medicos m ON m.id_medico = c.fk_id_medico " +
+      "WHERE c.fk_id_medico = :idMedico", nativeQuery = true)
+  List<Map<String, Object>> buscarConsultasPorMedico(@Param("idMedico") Integer idMedico);
 
 }
