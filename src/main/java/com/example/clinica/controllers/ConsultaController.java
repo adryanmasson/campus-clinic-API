@@ -6,6 +6,7 @@ import com.example.clinica.dto.AtualizarConsultaDTO;
 import com.example.clinica.dto.ConsultaDTO;
 import com.example.clinica.services.ConsultaService;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -83,6 +86,18 @@ public class ConsultaController {
         String mensagem = consultas.isEmpty()
                 ? "Nenhuma consulta encontrada para o médico."
                 : "Consultas do médico retornadas com sucesso.";
+
+        return ResponseEntity.ok(ApiResponse.sucesso(mensagem, consultas));
+    }
+
+    @GetMapping("/data/{data}")
+    public ResponseEntity<ApiResponse<List<ConsultaDTO>>> listarPorData(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
+        List<ConsultaDTO> consultas = consultaService.listarConsultasPorData(data);
+
+        String mensagem = consultas.isEmpty()
+                ? "Nenhuma consulta encontrada para esta data."
+                : "Consultas da data retornadas com sucesso.";
 
         return ResponseEntity.ok(ApiResponse.sucesso(mensagem, consultas));
     }

@@ -188,7 +188,7 @@ public class ConsultaService {
                                 proj.getStatus());
         }
 
-        @Transactional(readOnly = true)
+        @Transactional
         public List<ConsultaDTO> listarConsultasPorPaciente(Integer idPaciente) {
                 List<Consulta> consultas = consultaRepository.findByPacienteId(idPaciente);
 
@@ -220,7 +220,7 @@ public class ConsultaService {
                 }).collect(Collectors.toList());
         }
 
-        @Transactional(readOnly = true)
+        @Transactional
         public List<ConsultaDTO> listarConsultasPorMedico(Integer idMedico) {
                 List<Map<String, Object>> consultas = consultaRepository.buscarConsultasPorMedico(idMedico);
 
@@ -233,4 +233,19 @@ public class ConsultaService {
                                 ((java.sql.Time) c.get("hora_fim")).toLocalTime(),
                                 String.valueOf(c.get("status")))).toList();
         }
+
+        @Transactional
+        public List<ConsultaDTO> listarConsultasPorData(LocalDate data) {
+                List<Map<String, Object>> consultas = consultaRepository.buscarConsultasPorData(data);
+
+                return consultas.stream().map(c -> new ConsultaDTO(
+                                (Integer) c.get("id"),
+                                (String) c.get("nome_paciente"),
+                                (String) c.get("nome_medico"),
+                                ((java.sql.Date) c.get("data_consulta")).toLocalDate(),
+                                ((java.sql.Time) c.get("hora_inicio")).toLocalTime(),
+                                ((java.sql.Time) c.get("hora_fim")).toLocalTime(),
+                                String.valueOf(c.get("status")))).toList();
+        }
+
 }
