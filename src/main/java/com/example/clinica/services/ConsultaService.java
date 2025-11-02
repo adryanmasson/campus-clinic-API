@@ -150,4 +150,40 @@ public class ConsultaService {
                                 proj.getStatus());
         }
 
+        @Transactional
+        public ConsultaDTO cancelarConsulta(Integer idConsulta) {
+                Consulta consulta = consultaRepository.findById(idConsulta)
+                                .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+
+                if (consulta.getStatus() == ConsultaStatus.CANCELADA) {
+                        throw new RuntimeException("A consulta já está cancelada.");
+                }
+
+                consulta.setStatus(ConsultaStatus.CANCELADA);
+                consultaRepository.save(consulta);
+
+                ConsultaDetalhadaProjection proj = consultaRepository
+                                .buscarConsultaDetalhada(consulta.getId_consulta());
+                if (proj == null) {
+                        throw new RuntimeException("Falha ao recuperar consulta detalhada após cancelamento.");
+                }
+
+                java.sql.Date sqlDate = proj.getData_consulta();
+                java.sql.Time sqlHi = proj.getHora_inicio();
+                java.sql.Time sqlHf = proj.getHora_fim();
+
+                LocalDate dataConsulta = sqlDate != null ? sqlDate.toLocalDate() : null;
+                LocalTime horaInicio = sqlHi != null ? sqlHi.toLocalTime() : null;
+                LocalTime horaFim = sqlHf != null ? sqlHf.toLocalTime() : null;
+
+                return new ConsultaDTO(
+                                proj.getId(),
+                                proj.getNome_paciente(),
+                                proj.getNome_medico(),
+                                dataConsulta,
+                                horaInicio,
+                                horaFim,
+                                proj.getStatus());
+        }
+
 }

@@ -59,4 +59,10 @@ public class ConsultaController {
         return ResponseEntity.ok(ApiResponse.sucesso("Consulta atualizada com sucesso", consultaAtualizada));
     }
 
+    @PutMapping("/{id}/cancelar")
+    public ResponseEntity<ApiResponse<ConsultaDTO>> cancelar(@PathVariable Integer id) {
+        ConsultaDTO consultaCancelada = consultaService.cancelarConsulta(id);
+        return ResponseEntity.ok(ApiResponse.sucesso("Consulta cancelada com sucesso", consultaCancelada));
+    }
+
 }
