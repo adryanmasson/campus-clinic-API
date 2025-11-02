@@ -1,6 +1,7 @@
 package com.example.clinica.controllers;
 
 import com.example.clinica.dto.ApiResponse;
+import com.example.clinica.dto.ConsultaDTO;
 import com.example.clinica.models.Medico;
 import com.example.clinica.services.MedicoService;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +69,19 @@ public class MedicoController {
                 : "Médicos encontrados.";
 
         return ResponseEntity.ok(ApiResponse.sucesso(mensagem, medicos));
+    }
+
+    @GetMapping("/{id}/relatorio-consultas")
+    public ResponseEntity<ApiResponse<List<ConsultaDTO>>> relatorioConsultasPorMedico(
+            @PathVariable Integer id) {
+
+        List<ConsultaDTO> consultas = medicoService.relatorioConsultasPorMedico(id);
+
+        String mensagem = consultas.isEmpty()
+                ? "Nenhuma consulta encontrada para este médico."
+                : "Relatório de consultas do médico retornado com sucesso.";
+
+        return ResponseEntity.ok(ApiResponse.sucesso(mensagem, consultas));
     }
 
 }
