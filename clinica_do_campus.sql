@@ -22,7 +22,7 @@ CREATE TABLE medicos (
   ativo BIT NOT NULL DEFAULT 1,
   CONSTRAINT chk_medico_data CHECK (data_nascimento <= CAST(GETDATE() AS DATE)),
   CONSTRAINT fk_medico_especialidade FOREIGN KEY (fk_id_especialidade)
-    REFERENCES especialidades(id_especialidade)
+    REFERENCES especialidades(id_especialidade) ON UPDATE CASCADE
 );
 
 CREATE TABLE pacientes (
@@ -48,9 +48,9 @@ CREATE TABLE consultas (
     CHECK (status IN ('AGENDADA','REALIZADA','CANCELADA')),
   CONSTRAINT chk_hora_consulta CHECK (hora_inicio < hora_fim),
   CONSTRAINT fk_consulta_paciente FOREIGN KEY (fk_id_paciente)
-    REFERENCES pacientes(id_paciente),
+    REFERENCES pacientes(id_paciente) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_consulta_medico FOREIGN KEY (fk_id_medico)
-    REFERENCES medicos(id_medico)
+    REFERENCES medicos(id_medico) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE prontuarios (
@@ -77,8 +77,7 @@ CREATE TABLE auditoria_prontuario (
   prescricao_nova VARCHAR(MAX),
   data_alteracao DATETIME2 NOT NULL,
   CONSTRAINT fk_auditoria_prontuario FOREIGN KEY (fk_id_prontuario)
-    REFERENCES prontuarios(id_prontuario)
-    ON DELETE CASCADE
+    REFERENCES prontuarios(id_prontuario) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 GO
@@ -176,4 +175,13 @@ BEGIN
   WHERE ISNULL(d.anamnese,'') <> ISNULL(i.anamnese,'')
      OR ISNULL(d.diagnostico,'') <> ISNULL(i.diagnostico,'')
      OR ISNULL(d.prescricao,'') <> ISNULL(i.prescricao,'');
+END;
+GO
+
+-- Indexes for foreign keys (added to preserve performance of FK-based queries)
+CREATE INDEX idx_consultas_fk_id_medico ON consultas(fk_id_medico);
+CREATE INDEX idx_consultas_fk_id_paciente ON consultas(fk_id_paciente);
+CREATE INDEX idx_auditoria_fk_prontuario ON auditoria_prontuario(fk_id_prontuario);
+CREATE INDEX idx_prontuarios_fk_id_consulta ON prontuarios(fk_id_consulta);
+
 
