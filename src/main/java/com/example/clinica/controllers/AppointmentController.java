@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/appointments")
+@RequestMapping("/appointments")
 public class AppointmentController {
 
     private final AppointmentService consultaService;

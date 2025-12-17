@@ -12,7 +12,7 @@ import com.example.clinica.dto.ApiResponse;
 import com.example.clinica.dto.UpdateMedicalRecordDTO;
 
 @RestController
-@RequestMapping("/api/medical-records")
+@RequestMapping("/medical-records")
 public class MedicalRecordController {
 
     private final MedicalRecordService prontuarioService;
