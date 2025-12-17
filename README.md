@@ -603,7 +603,7 @@ SPRING_DATASOURCE_PASSWORD=your_password
 
 - **App Service**: Free F1 Plan - Brazil South
 - **Azure SQL Database**: GeneralPurpose Gen5 - West US 2
-- **Database Server**: clinica-campus-banco.database.windows.net
+- **Database Server**: campus-clinic-sql.database.windows.net
 
 ### Deployment Commands (Azure CLI)
 
