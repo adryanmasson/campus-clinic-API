@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@NamedStoredProcedureQuery(name = "Appointment.criar_consulta", procedureName = "create_appointment", parameters = {
+@NamedStoredProcedureQuery(name = "Appointment.createAppointment", procedureName = "create_appointment", parameters = {
         @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_patient_id", type = Integer.class),
         @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_doctor_id", type = Integer.class),
         @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_appointment_date", type = java.time.LocalDate.class),

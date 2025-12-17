@@ -67,10 +67,10 @@ public class AppointmentService {
 
         @Transactional
         public AppointmentDTO scheduleAppointment(Integer patientId, Integer doctorId,
-                        LocalDate data, LocalTime startTime, LocalTime endTime) {
+                        LocalDate appointmentDate, LocalTime startTime, LocalTime endTime) {
 
                 try {
-                        appointmentRepository.createAppointment(patientId, doctorId, data, startTime, endTime);
+                        appointmentRepository.createAppointment(patientId, doctorId, appointmentDate, startTime, endTime);
                 } catch (DataAccessException ex) {
                         Throwable cause = ex.getMostSpecificCause();
                         String message = cause != null ? cause.getMessage() : ex.getMessage();
@@ -78,7 +78,8 @@ public class AppointmentService {
                         throw new RuntimeException(message);
                 }
 
-                Appointment appointment = appointmentRepository.findInserted(patientId, doctorId, data, startTime, endTime)
+                Appointment appointment = appointmentRepository
+                                .findInserted(patientId, doctorId, appointmentDate, startTime, endTime)
                                 .orElseThrow(() -> new RuntimeException("Failed to retrieve the created appointment."));
 
                 return new AppointmentDTO(
@@ -104,7 +105,8 @@ public class AppointmentService {
                         LocalTime newEndTime = dto.getEndTime() != null ? dto.getEndTime() : appointment.getEndTime();
 
                         boolean conflict = !appointmentRepository
-                                        .findByDoctorDateAndTime(appointment.getDoctorId(), newDate, newStartTime, newEndTime,
+                                        .findByDoctorDateAndTime(appointment.getDoctorId(), newDate, newStartTime,
+                                                        newEndTime,
                                                         appointment.getAppointmentId())
                                         .isEmpty();
 

@@ -111,7 +111,7 @@ public class MedicalRecordDTO {
                 String prescription = (String) m.get("prescription");
 
                 LocalDate recordDate = null;
-                Object d = m.get("data_registro");
+                Object d = m.get("recordDate");
                 if (d != null) {
                         if (d instanceof java.sql.Date) {
                                 recordDate = ((java.sql.Date) d).toLocalDate();
@@ -133,14 +133,17 @@ public class MedicalRecordDTO {
 
                 return new MedicalRecordDTO(
                                 medicalRecord.getRecordId(),
-                                medicalRecord.getAppointment() != null ? medicalRecord.getAppointment().getAppointmentId()
+                                medicalRecord.getAppointment() != null
+                                                ? medicalRecord.getAppointment().getAppointmentId()
                                                 : null,
-                                medicalRecord.getAppointment() != null && medicalRecord.getAppointment().getPatient() != null
-                                                ? medicalRecord.getAppointment().getPatient().getName()
-                                                : null,
-                                medicalRecord.getAppointment() != null && medicalRecord.getAppointment().getDoctor() != null
-                                                ? medicalRecord.getAppointment().getDoctor().getName()
-                                                : null,
+                                medicalRecord.getAppointment() != null
+                                                && medicalRecord.getAppointment().getPatient() != null
+                                                                ? medicalRecord.getAppointment().getPatient().getName()
+                                                                : null,
+                                medicalRecord.getAppointment() != null
+                                                && medicalRecord.getAppointment().getDoctor() != null
+                                                                ? medicalRecord.getAppointment().getDoctor().getName()
+                                                                : null,
                                 medicalRecord.getAnamnesis(),
                                 medicalRecord.getDiagnosis(),
                                 medicalRecord.getPrescription(),

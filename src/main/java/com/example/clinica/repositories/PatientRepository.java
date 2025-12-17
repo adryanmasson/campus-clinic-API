@@ -39,13 +39,13 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
     @Query(value = """
                 SELECT
                     e.name AS specialty,
-                    COUNT(DISTINCT p.patient_id) AS totalPacientes
+                    COUNT(DISTINCT p.patient_id) AS totalPatients
                 FROM appointments c
                 INNER JOIN patients p ON p.patient_id = c.patient_id
                 INNER JOIN doctors m ON m.doctor_id = c.doctor_id
                 INNER JOIN specialties e ON e.specialty_id = m.specialty_id
                 GROUP BY e.name
-                ORDER BY totalPacientes DESC
+                ORDER BY totalPatients DESC
             """, nativeQuery = true)
     List<Map<String, Object>> countPatientsBySpecialty();
 
