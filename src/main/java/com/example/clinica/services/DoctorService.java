@@ -89,7 +89,7 @@ public class DoctorService {
         Doctor doctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
-        boolean hasScheduledAppointments = appointmentRepository.existsByFkIdMedicoAndStatus(id,
+        boolean hasScheduledAppointments = appointmentRepository.existsByDoctorIdAndStatus(id,
                 AppointmentStatus.SCHEDULED);
 
         if (hasScheduledAppointments) {
@@ -100,7 +100,7 @@ public class DoctorService {
     }
 
     public List<Doctor> listBySpecialty(Integer specialtyId) {
-        return doctorRepository.findByEspecialidadeIdEspecialidade(specialtyId);
+        return doctorRepository.findBySpecialtyId(specialtyId);
     }
 
     @Transactional(readOnly = true)

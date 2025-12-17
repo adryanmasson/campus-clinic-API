@@ -104,7 +104,7 @@ public class AppointmentService {
                         LocalTime newEndTime = dto.getEndTime() != null ? dto.getEndTime() : appointment.getEndTime();
 
                         boolean conflict = !appointmentRepository
-                                        .findByMedicoDataHora(appointment.getDoctorId(), newDate, newStartTime, newEndTime,
+                                        .findByDoctorDateAndTime(appointment.getDoctorId(), newDate, newStartTime, newEndTime,
                                                         appointment.getAppointmentId())
                                         .isEmpty();
 
@@ -190,7 +190,7 @@ public class AppointmentService {
 
         @Transactional
         public List<AppointmentDTO> listAppointmentsByPatient(Integer patientId) {
-                List<Appointment> appointments = appointmentRepository.findByPacienteId(patientId);
+                List<Appointment> appointments = appointmentRepository.findByPatientId(patientId);
 
                 if (appointments.isEmpty()) {
                         return Collections.emptyList();

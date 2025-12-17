@@ -17,9 +17,9 @@ import java.util.Optional;
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
 
   @Query("select c from Appointment c where c.patient.patientId = :id")
-  List<Appointment> findByPacienteId(@Param("id") Integer id);
+  List<Appointment> findByPatientId(@Param("id") Integer id);
 
-  boolean existsByFkIdMedicoAndStatus(Integer doctorId, AppointmentStatus status);
+  boolean existsByDoctorIdAndStatus(Integer doctorId, AppointmentStatus status);
 
   @Procedure(name = "Appointment.criar_consulta")
   void createAppointment(
@@ -44,15 +44,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
   @Query(value = "SELECT c.* FROM appointments c " +
       "WHERE c.doctor_id = :doctorId " +
-      "  AND c.appointment_date = :data " +
-      "  AND ( (c.start_time <= :novoInicio AND c.end_time > :novoInicio) " +
-      "     OR (c.start_time < :novoFim AND c.end_time >= :novoFim) " +
-      "     OR (c.start_time >= :novoInicio AND c.end_time <= :novoFim) ) " +
+      "  AND c.appointment_date = :date " +
+      "  AND ( (c.start_time <= :startTime AND c.end_time > :startTime) " +
+      "     OR (c.start_time < :endTime AND c.end_time >= :endTime) " +
+      "     OR (c.start_time >= :startTime AND c.end_time <= :endTime) ) " +
       "  AND c.appointment_id <> :excludeId", nativeQuery = true)
-  List<Appointment> findByMedicoDataHora(@Param("doctorId") Integer doctorId,
-      @Param("data") LocalDate data,
-      @Param("novoInicio") LocalTime novoInicio,
-      @Param("novoFim") LocalTime novoFim,
+  List<Appointment> findByDoctorDateAndTime(@Param("doctorId") Integer doctorId,
+      @Param("date") LocalDate date,
+      @Param("startTime") LocalTime startTime,
+      @Param("endTime") LocalTime endTime,
       @Param("excludeId") Integer excludeId);
 
   @Query(value = "SELECT c.appointment_id AS id, c.appointment_date, c.start_time, c.end_time, c.status, " +
@@ -131,7 +131,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
       WHERE c.doctor_id = :doctorId
         AND (c.appointment_date > CAST(GETDATE() AS DATE) OR (c.appointment_date = CAST(GETDATE() AS DATE) AND c.end_time >= CAST(GETDATE() AS time)))
       ORDER BY c.appointment_date ASC, c.start_time ASC
-
       """, nativeQuery = true)
   List<Map<String, Object>> upcomingAppointmentsReport(@Param("doctorId") Integer doctorId);
 

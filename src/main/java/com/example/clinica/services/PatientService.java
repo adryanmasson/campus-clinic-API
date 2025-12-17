@@ -30,7 +30,7 @@ public class PatientService {
 
     public Patient findPatientById(Integer id) {
         return patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Patient não encontrado com ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + id));
     }
 
     public Patient createPatient(Patient patient) {
@@ -61,7 +61,7 @@ public class PatientService {
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Patient not found."));
 
-        List<Appointment> appointments = appointmentRepository.findByPacienteId(id);
+        List<Appointment> appointments = appointmentRepository.findByPatientId(id);
         if (!appointments.isEmpty()) {
             throw new RuntimeException("Patient has associated appointments and cannot be deleted.");
         }
@@ -70,7 +70,7 @@ public class PatientService {
     }
 
     public Integer calculatePatientAge(Integer patientId) {
-        return patientRepository.calcularIdade(patientId);
+        return patientRepository.calculateAge(patientId);
     }
 
     @Transactional

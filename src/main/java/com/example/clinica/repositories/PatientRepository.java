@@ -15,7 +15,7 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
     Optional<Patient> findByCpf(String cpf);
 
     @Query(value = "SELECT dbo.calculate_age(birth_date) FROM patients WHERE patient_id = ?1", nativeQuery = true)
-    Integer calcularIdade(Integer patientId);
+    Integer calculateAge(Integer patientId);
 
     @Query(value = """
                 SELECT c.appointment_id AS appointmentId,
