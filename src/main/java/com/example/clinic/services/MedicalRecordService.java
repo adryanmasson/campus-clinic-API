@@ -4,8 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import com.example.clinic.exceptions.BusinessRuleException;
+import com.example.clinic.exceptions.DuplicateResourceException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +34,7 @@ public class MedicalRecordService {
     @Transactional
     public List<MedicalRecordDTO> listMedicalRecords() {
         List<Map<String, Object>> medicalRecords = medicalRecordRepository.listMedicalRecords();
-        return medicalRecords.stream().map(MedicalRecordDTO::fromMap).collect(Collectors.toList());
+        return medicalRecords.stream().map(MedicalRecordDTO::fromMap).toList();
     }
 
     @Transactional
@@ -45,16 +47,16 @@ public class MedicalRecordService {
     public MedicalRecordDTO createMedicalRecord(CreateMedicalRecordDTO dto) {
         Integer appointmentId = dto.getAppointmentId();
         if (appointmentId == null) {
-            throw new RuntimeException("appointmentId is required.");
+            throw new BusinessRuleException("appointmentId is required.");
         }
 
         MedicalRecord existing = medicalRecordRepository.findByAppointmentId(appointmentId);
         if (existing != null) {
-            throw new RuntimeException("Medical record already exists for this appointment.");
+            throw new DuplicateResourceException("Medical record already exists for this appointment.");
         }
 
         Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new RuntimeException("Appointment not found."));
+                .orElseThrow(() -> new EntityNotFoundException("Appointment not found."));
 
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setAppointment(appointment);

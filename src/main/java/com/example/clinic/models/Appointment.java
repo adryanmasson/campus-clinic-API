@@ -121,7 +121,9 @@ public class Appointment {
                 mid = (Integer) doctor.getClass().getMethod("getDoctorId").invoke(doctor);
                 if (mid != null)
                     this.doctorId = mid;
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                // Reflection failure expected when doctor object doesn't have getDoctorId method
+                // or is a proxy. Doctor ID will be set separately if needed.
             }
         }
     }

@@ -1,17 +1,19 @@
 package com.example.clinic.services;
 
+import com.example.clinic.exceptions.BusinessRuleException;
+import com.example.clinic.exceptions.DuplicateResourceException;
 import com.example.clinic.dto.AppointmentDTO;
 import com.example.clinic.dto.PatientHistoryDTO;
 import com.example.clinic.models.Appointment;
 import com.example.clinic.models.Patient;
 import com.example.clinic.repositories.PatientRepository;
 import com.example.clinic.repositories.AppointmentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
@@ -30,13 +32,13 @@ public class PatientService {
 
     public Patient findPatientById(Integer id) {
         return patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Patient not found with ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found with ID: " + id));
     }
 
     public Patient createPatient(Patient patient) {
         Optional<Patient> existingPatient = patientRepository.findByCpf(patient.getCpf());
         if (existingPatient.isPresent()) {
-            throw new RuntimeException("Patient already exists with this CPF: " + patient.getCpf());
+            throw new DuplicateResourceException("Patient already exists with this CPF: " + patient.getCpf());
         }
         return patientRepository.save(patient);
     }
@@ -59,11 +61,11 @@ public class PatientService {
 
     public void deletePatient(Integer id) {
         Patient patient = patientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Patient not found."));
+                .orElseThrow(() -> new EntityNotFoundException("Patient not found."));
 
         List<Appointment> appointments = appointmentRepository.findByPatientId(id);
         if (!appointments.isEmpty()) {
-            throw new RuntimeException("Patient has associated appointments and cannot be deleted.");
+            throw new BusinessRuleException("Patient has associated appointments and cannot be deleted.");
         }
 
         patientRepository.delete(patient);
@@ -90,7 +92,7 @@ public class PatientService {
             dto.setPrescription((String) h.get("prescription"));
             dto.setDoctorName((String) h.get("doctorName"));
             return dto;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     @Transactional(readOnly = true)
@@ -107,7 +109,7 @@ public class PatientService {
             dto.setDoctorName((String) c.get("doctorName"));
             dto.setPatientName((String) c.get("patientName"));
             return dto;
-        }).collect(Collectors.toList());
+        }).toList();
 
     }
 

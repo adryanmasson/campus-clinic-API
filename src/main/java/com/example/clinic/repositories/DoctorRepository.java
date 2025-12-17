@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Integer> {
 
-    boolean existsByCrm(String medicalLicense);
+    boolean existsByMedicalLicense(String medicalLicense);
 
-    List<Doctor> findBySpecialtyId(Integer specialtyId);
+    List<Doctor> findBySpecialty_SpecialtyId(Integer specialtyId);
 }

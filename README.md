@@ -211,7 +211,7 @@ GET /api/doctors/{id}
 
 #### Get Doctors by Specialty
 ```http
-GET /api/doctors?specialty={specialty_id}
+GET /api/doctors/specialty/{specialty_id}
 ```
 
 #### Register New Doctor
@@ -241,12 +241,22 @@ Content-Type: application/json
 }
 ```
 
-#### Check Doctor Availability
+#### Get Doctor Available Time Slots
 ```http
-GET /api/doctors/{id}/availability?date={yyyy-MM-dd}
+GET /api/doctors/{id}/available-slots?date={yyyy-MM-dd}
 ```
 
-**Response**: Available time slots for appointments
+**Response**: Available time slots for appointments on specified date
+
+#### Get Doctor's Upcoming Appointments
+```http
+GET /api/doctors/{id}/upcoming/appointments
+```
+
+#### Get Doctor's Appointment Report
+```http
+GET /api/doctors/{id}/report/appointments
+```
 
 ---
 
@@ -282,10 +292,19 @@ GET /api/patients
 GET /api/patients/{id}
 ```
 
-#### Get Patient by CPF
+#### Get Patient Age
 ```http
-GET /api/patients/cpf/{cpf}
+GET /api/patients/{id}/age
 ```
+
+**Response**: Calculates patient's age using the `calculate_age` database function
+
+#### Get Patient's Appointment Report
+```http
+GET /api/patients/{id}/report/appointments/{months}
+```
+
+**Response**: Appointment report for the last N months
 
 #### Register New Patient
 ```http
@@ -349,24 +368,24 @@ GET /api/appointments
 }
 ```
 
+#### Get Appointment by ID
+```http
+GET /api/appointments/{id}
+```
+
 #### Get Appointments by Patient
 ```http
-GET /api/appointments?patient={patient_id}
+GET /api/appointments/patient/{patient_id}
 ```
 
 #### Get Appointments by Doctor
 ```http
-GET /api/appointments?doctor={doctor_id}
+GET /api/appointments/doctor/{doctor_id}
 ```
 
 #### Get Appointments by Date
 ```http
-GET /api/appointments?date={yyyy-MM-dd}
-```
-
-#### Get Appointments by Status
-```http
-GET /api/appointments?status={SCHEDULED|COMPLETED|CANCELLED}
+GET /api/appointments/date/{yyyy-MM-dd}
 ```
 
 #### Schedule New Appointment
@@ -383,20 +402,19 @@ Content-Type: application/json
 }
 ```
 
-#### Update Appointment
+#### Update Appointment Status
 ```http
 PUT /api/appointments/{id}
 Content-Type: application/json
 
 {
-  "appointmentDate": "2025-01-16",
-  "startTime": "10:00:00"
+  "status": "COMPLETED"
 }
 ```
 
 #### Cancel Appointment
 ```http
-DELETE /api/appointments/{id}
+PUT /api/appointments/{id}/cancel
 ```
 
 > **Note**: Cancellation changes status to CANCELLED and preserves record for audit
@@ -459,9 +477,15 @@ PUT /api/medical-records/{id}
 Content-Type: application/json
 
 {
+  "anamnesis": "Updated patient history",
   "diagnosis": "Updated diagnosis",
   "prescription": "New prescription"
 }
+```
+
+#### Delete Medical Record
+```http
+DELETE /api/medical-records/{id}
 ```
 
 > **⚠️ Important**: All changes to medical records are automatically logged in the audit table through a database trigger.
@@ -568,7 +592,7 @@ spring.datasource.password=your_password
 4. **Build and run**
 ```bash
 mvn clean package
-java -jar target/clinica-0.0.1-SNAPSHOT.jar
+java -jar target/campus-clinic-api-0.0.1-SNAPSHOT.jar
 ```
 
 Or run directly with Maven:
@@ -589,7 +613,7 @@ This project is configured for automated deployment to **Azure App Service** via
 
 ### CI/CD Configuration
 
-The workflow `.github/workflows/main_clinica-api-adryan.yml` automates:
+The workflow `.github/workflows/clinic-api-deploy.yml` automates:
 
 1. ✅ **Build** the project with Maven
 2. ✅ **Package** as executable JAR
@@ -638,21 +662,21 @@ az webapp restart \
 campus-clinic-api/
 ├── src/
 │   ├── main/
-│   │   ├── java/com/example/clinica/
+│   │   ├── java/com/example/clinic/
 │   │   │   ├── controllers/          # REST endpoints
-│   │   │   │   ├── SpecialtyController.java
-│   │   │   │   ├── DoctorController.java
-│   │   │   │   ├── PatientController.java
-│   │   │   │   ├── AppointmentController.java
-│   │   │   │   └── MedicalRecordController.java
+│   │   │   │   ├── EspecialidadeController.java
+│   │   │   │   ├── MedicoController.java
+│   │   │   │   ├── PacienteController.java
+│   │   │   │   ├── ConsultaController.java
+│   │   │   │   └── ProntuarioController.java
 │   │   │   ├── models/               # JPA entities
-│   │   │   │   ├── Specialty.java
-│   │   │   │   ├── Doctor.java
-│   │   │   │   ├── Patient.java
-│   │   │   │   ├── Appointment.java
-│   │   │   │   ├── MedicalRecord.java
-│   │   │   │   ├── AppointmentStatus.java
-│   │   │   │   └── Gender.java
+│   │   │   │   ├── Especialidade.java
+│   │   │   │   ├── Medico.java
+│   │   │   │   ├── Paciente.java
+│   │   │   │   ├── Consulta.java
+│   │   │   │   ├── Prontuario.java
+│   │   │   │   ├── ConsultaStatus.java
+│   │   │   │   └── Sexo.java
 │   │   │   ├── repositories/         # Data access layer
 │   │   │   ├── services/             # Business logic
 │   │   │   ├── dto/                  # Data transfer objects
@@ -668,6 +692,31 @@ campus-clinic-api/
 └── README.md                         # This file
 ```
 
+## 🧪 Automated Testing with Docker
+
+This project includes a comprehensive automated test suite that runs in isolated Docker containers. The test suite covers all 33 API endpoints (POST/PUT/DELETE/GET) with detailed logging.
+
+### Running Tests
+
+```powershell
+# Run tests with automatic cleanup
+powershell -ExecutionPolicy Bypass -File .\test-docker.ps1 -TestOnly -Cleanup -MaxWaitSeconds 180
+```
+
+**Test Features:**
+- ✅ **33 endpoint tests** covering all CRUD operations
+- ✅ **Per-endpoint logging** with status codes and messages
+- ✅ **100% data isolation** using in-memory H2 database
+- ✅ **Automatic cleanup** removes containers and images after tests
+- ✅ **Auto-build** rebuilds image if missing
+
+**Test Flags:**
+- `-TestOnly`: Skip rebuild if image exists (auto-builds if missing)
+- `-Cleanup`: Remove container and image after tests
+- `-MaxWaitSeconds`: Container readiness timeout (default: 60)
+
+---
+
 ## 🐳 Docker (Quick Start)
 
 Build and run locally with Docker:
@@ -681,7 +730,21 @@ docker run --rm -p 8080:8080 \
   campus-clinic-api
 ```
 
-If you don’t have a SQL Server handy, the API still starts but DB-backed endpoints will error — for interviews, this is enough to evaluate structure, security, and API design.
+### Docker Compose (Full Stack)
+
+Run the complete stack with SQL Server and API:
+
+```bash
+docker-compose up -d
+```
+
+**Services:**
+- `clinic-sqlserver`: SQL Server 2022 container
+- `clinic-api`: Spring Boot API container
+
+Access the API at `http://localhost:8080/api/specialties`
+
+**Note:** If you don't have SQL Server configured, the API uses H2 in-memory database by default for testing.
 
 ## 🧭 Architecture (Mermaid)
 

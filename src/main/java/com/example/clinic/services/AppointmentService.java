@@ -1,5 +1,7 @@
 package com.example.clinic.services;
 
+import com.example.clinic.exceptions.AppointmentConflictException;
+import com.example.clinic.exceptions.BusinessRuleException;
 import com.example.clinic.dto.UpdateAppointmentDTO;
 import com.example.clinic.dto.AppointmentDTO;
 import com.example.clinic.models.Appointment;
@@ -8,6 +10,7 @@ import com.example.clinic.models.Doctor;
 import com.example.clinic.repositories.AppointmentDetailProjection;
 import com.example.clinic.repositories.AppointmentRepository;
 import com.example.clinic.repositories.DoctorRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -48,7 +51,7 @@ public class AppointmentService {
 
         public AppointmentDTO findAppointmentById(Integer id) {
                 Appointment appointment = appointmentRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException("Appointment not found."));
+                                .orElseThrow(() -> new EntityNotFoundException("Appointment not found."));
 
                 String patientName = appointment.getPatient().getName();
                 String doctorName = doctorRepository.findById(appointment.getDoctorId())
@@ -76,12 +79,12 @@ public class AppointmentService {
                         Throwable cause = ex.getMostSpecificCause();
                         String message = cause != null ? cause.getMessage() : ex.getMessage();
 
-                        throw new RuntimeException(message);
+                        throw new AppointmentConflictException(message);
                 }
 
                 Appointment appointment = appointmentRepository
                                 .findInserted(patientId, doctorId, appointmentDate, startTime, endTime)
-                                .orElseThrow(() -> new RuntimeException("Failed to retrieve the created appointment."));
+                                .orElseThrow(() -> new EntityNotFoundException("Failed to retrieve the created appointment."));
 
                 return new AppointmentDTO(
                                 appointment.getId(),
@@ -96,7 +99,7 @@ public class AppointmentService {
         @Transactional
         public AppointmentDTO updateAppointment(Integer appointmentId, UpdateAppointmentDTO dto) {
                 Appointment appointment = appointmentRepository.findById(appointmentId)
-                                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+                                .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
 
                 if (dto.getAppointmentDate() != null || dto.getStartTime() != null || dto.getEndTime() != null) {
                         LocalDate newDate = dto.getAppointmentDate() != null ? dto.getAppointmentDate()
@@ -112,7 +115,7 @@ public class AppointmentService {
                                         .isEmpty();
 
                         if (conflict) {
-                                throw new RuntimeException("Doctor already has an appointment scheduled at this time.");
+                                throw new AppointmentConflictException("Doctor already has an appointment scheduled at this time.");
                         }
 
                         appointment.setAppointmentDate(newDate);
@@ -124,7 +127,7 @@ public class AppointmentService {
                         try {
                                 appointment.setStatus(AppointmentStatus.valueOf(dto.getStatus()));
                         } catch (IllegalArgumentException ex) {
-                                throw new RuntimeException(
+                                throw new BusinessRuleException(
                                                 "Invalid status. Valid values: SCHEDULED, COMPLETED, CANCELLED.");
                         }
                 }
@@ -134,7 +137,7 @@ public class AppointmentService {
                 AppointmentDetailProjection proj = appointmentRepository
                                 .findDetailedAppointment(appointment.getAppointmentId());
                 if (proj == null) {
-                        throw new RuntimeException("Failed to retrieve detailed appointment after update.");
+                        throw new EntityNotFoundException("Failed to retrieve detailed appointment after update.");
                 }
 
                 java.sql.Date sqlDate = proj.getAppointmentDate();
@@ -158,10 +161,10 @@ public class AppointmentService {
         @Transactional
         public AppointmentDTO cancelAppointment(Integer appointmentId) {
                 Appointment appointment = appointmentRepository.findById(appointmentId)
-                                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+                                .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
 
                 if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
-                        throw new RuntimeException("Appointment is already cancelled.");
+                        throw new BusinessRuleException("Appointment is already cancelled.");
                 }
 
                 appointment.setStatus(AppointmentStatus.CANCELLED);
@@ -170,7 +173,7 @@ public class AppointmentService {
                 AppointmentDetailProjection proj = appointmentRepository
                                 .findDetailedAppointment(appointment.getAppointmentId());
                 if (proj == null) {
-                        throw new RuntimeException("Failed to retrieve detailed appointment after cancellation.");
+                        throw new EntityNotFoundException("Failed to retrieve detailed appointment after cancellation.");
                 }
 
                 java.sql.Date sqlDate = proj.getAppointmentDate();
