@@ -9,8 +9,8 @@ public class MedicalRecordDTO {
 
         private Integer recordId;
         private Integer appointmentId;
-        private String nomePaciente;
-        private String nomeMedico;
+        private String patientName;
+        private String doctorName;
         private String anamnesis;
         private String diagnosis;
         private String prescription;
@@ -19,12 +19,12 @@ public class MedicalRecordDTO {
         public MedicalRecordDTO() {
         }
 
-        public MedicalRecordDTO(Integer recordId, Integer appointmentId, String nomePaciente, String nomeMedico,
+        public MedicalRecordDTO(Integer recordId, Integer appointmentId, String patientName, String doctorName,
                         String anamnesis, String diagnosis, String prescription, LocalDate recordDate) {
                 this.recordId = recordId;
                 this.appointmentId = appointmentId;
-                this.nomePaciente = nomePaciente;
-                this.nomeMedico = nomeMedico;
+                this.patientName = patientName;
+                this.doctorName = doctorName;
                 this.anamnesis = anamnesis;
                 this.diagnosis = diagnosis;
                 this.prescription = prescription;
@@ -39,28 +39,28 @@ public class MedicalRecordDTO {
                 this.recordId = recordId;
         }
 
-        public Integer getIdConsulta() {
+        public Integer getAppointmentId() {
                 return appointmentId;
         }
 
-        public void setIdConsulta(Integer appointmentId) {
+        public void setAppointmentId(Integer appointmentId) {
                 this.appointmentId = appointmentId;
         }
 
-        public String getNomePaciente() {
-                return nomePaciente;
+        public String getPatientName() {
+                return patientName;
         }
 
-        public void setNomePaciente(String nomePaciente) {
-                this.nomePaciente = nomePaciente;
+        public void setPatientName(String patientName) {
+                this.patientName = patientName;
         }
 
-        public String getNomeMedico() {
-                return nomeMedico;
+        public String getDoctorName() {
+                return doctorName;
         }
 
-        public void setNomeMedico(String nomeMedico) {
-                this.nomeMedico = nomeMedico;
+        public void setDoctorName(String doctorName) {
+                this.doctorName = doctorName;
         }
 
         public String getAnamnesis() {
@@ -103,8 +103,8 @@ public class MedicalRecordDTO {
                 Integer recordId = m.get("recordId") != null ? ((Number) m.get("recordId")).intValue()
                                 : null;
                 Integer appointmentId = m.get("appointmentId") != null ? ((Number) m.get("appointmentId")).intValue() : null;
-                String nomePaciente = (String) m.get("nomePaciente");
-                String nomeMedico = (String) m.get("nomeMedico");
+                String patientName = (String) m.get("patientName");
+                String doctorName = (String) m.get("doctorName");
                 String anamnesis = (String) m.get("anamnesis");
                 String diagnosis = (String) m.get("diagnosis");
                 String prescription = (String) m.get("prescription");
@@ -121,7 +121,7 @@ public class MedicalRecordDTO {
                         }
                 }
 
-                return new MedicalRecordDTO(recordId, appointmentId, nomePaciente, nomeMedico, anamnesis, diagnosis,
+                return new MedicalRecordDTO(recordId, appointmentId, patientName, doctorName, anamnesis, diagnosis,
                                 prescription,
                                 recordDate);
         }

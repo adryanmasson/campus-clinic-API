@@ -19,11 +19,11 @@ public class CreateMedicalRecordDTO implements Serializable {
         this.prescription = prescription;
     }
 
-    public Integer getIdConsulta() {
+    public Integer getAppointmentId() {
         return appointmentId;
     }
 
-    public void setIdConsulta(Integer appointmentId) {
+    public void setAppointmentId(Integer appointmentId) {
         this.appointmentId = appointmentId;
     }
 

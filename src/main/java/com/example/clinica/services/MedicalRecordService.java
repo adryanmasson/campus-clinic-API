@@ -42,7 +42,7 @@ public class MedicalRecordService {
 
     @Transactional
     public MedicalRecordDTO createMedicalRecord(CreateMedicalRecordDTO dto) {
-        Integer appointmentId = dto.getIdConsulta();
+        Integer appointmentId = dto.getAppointmentId();
         if (appointmentId == null) {
             throw new RuntimeException("appointmentId é obrigatório.");
         }

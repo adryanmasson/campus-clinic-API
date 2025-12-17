@@ -100,12 +100,12 @@ public class PatientService {
         return consultas.stream().map(c -> {
             AppointmentDTO dto = new AppointmentDTO();
             dto.setId((Integer) c.get("appointmentId"));
-            dto.setDataConsulta(((java.sql.Date) c.get("dataConsulta")).toLocalDate());
-            dto.setHoraInicio(((java.sql.Time) c.get("horaInicio")).toLocalTime());
-            dto.setHoraFim(((java.sql.Time) c.get("horaFim")).toLocalTime());
+            dto.setAppointmentDate(((java.sql.Date) c.get("dataConsulta")).toLocalDate());
+            dto.setStartTime(((java.sql.Time) c.get("horaInicio")).toLocalTime());
+            dto.setEndTime(((java.sql.Time) c.get("horaFim")).toLocalTime());
             dto.setStatus((String) c.get("status"));
-            dto.setNomeMedico((String) c.get("nomeMedico"));
-            dto.setNomePaciente((String) c.get("nomePaciente"));
+            dto.setDoctorName((String) c.get("nomeMedico"));
+            dto.setPatientName((String) c.get("nomePaciente"));
             return dto;
         }).collect(Collectors.toList());
 

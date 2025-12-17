@@ -331,11 +331,11 @@ GET /api/appointments
   "data": [
     {
       "id": 1,
-      "nomePaciente": "John Smith",
-      "nomeMedico": "Dr. James Anderson",
-      "dataConsulta": "2025-01-15",
-      "horaInicio": "09:00:00",
-      "horaFim": "09:30:00",
+      "patientName": "John Smith",
+      "doctorName": "Dr. James Anderson",
+      "appointmentDate": "2025-01-15",
+      "startTime": "09:00:00",
+      "endTime": "09:30:00",
       "status": "SCHEDULED"
     }
   ]
@@ -364,19 +364,17 @@ GET /api/appointments?status={SCHEDULED|COMPLETED|CANCELLED}
 
 #### Schedule New Appointment
 ```http
-POST /api/appointments/agendar
+POST /api/appointments/schedule
 Content-Type: application/json
 
 {
   "patientId": 1,
   "doctorId": 1,
-  "data": "2025-01-15",
-  "horaInicio": "09:00:00",
-  "horaFim": "09:30:00"
+  "appointmentDate": "2025-01-15",
+  "startTime": "09:00:00",
+  "endTime": "09:30:00"
 }
 ```
-
-> **Note**: Field names use Portuguese internally but are mapped correctly.
 
 #### Update Appointment
 ```http
@@ -414,8 +412,8 @@ GET /api/medical-records
     {
       "recordId": 1,
       "appointmentId": 1,
-      "nomePaciente": "John Smith",
-      "nomeMedico": "Dr. James Anderson",
+      "patientName": "John Smith",
+      "doctorName": "Dr. James Anderson",
       "anamnesis": "Patient reports headache and fever for 2 days",
       "diagnosis": "Viral infection - Common cold",
       "prescription": "Rest, hydration, Paracetamol 500mg every 6 hours",

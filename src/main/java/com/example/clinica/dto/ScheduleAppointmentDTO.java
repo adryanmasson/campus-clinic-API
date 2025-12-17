@@ -7,59 +7,59 @@ public class ScheduleAppointmentDTO {
 
     private Integer patientId;
     private Integer doctorId;
-    private LocalDate data;
-    private LocalTime horaInicio;
-    private LocalTime horaFim;
+    private LocalDate appointmentDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     public ScheduleAppointmentDTO() {
     }
 
-    public ScheduleAppointmentDTO(Integer patientId, Integer doctorId, LocalDate data, LocalTime horaInicio,
-            LocalTime horaFim) {
+    public ScheduleAppointmentDTO(Integer patientId, Integer doctorId, LocalDate appointmentDate, LocalTime startTime,
+            LocalTime endTime) {
         this.patientId = patientId;
         this.doctorId = doctorId;
-        this.data = data;
-        this.horaInicio = horaInicio;
-        this.horaFim = horaFim;
+        this.appointmentDate = appointmentDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
-    public Integer getIdPaciente() {
+    public Integer getPatientId() {
         return patientId;
     }
 
-    public void setIdPaciente(Integer patientId) {
+    public void setPatientId(Integer patientId) {
         this.patientId = patientId;
     }
 
-    public Integer getIdMedico() {
+    public Integer getDoctorId() {
         return doctorId;
     }
 
-    public void setIdMedico(Integer doctorId) {
+    public void setDoctorId(Integer doctorId) {
         this.doctorId = doctorId;
     }
 
-    public LocalDate getData() {
-        return data;
+    public LocalDate getAppointmentDate() {
+        return appointmentDate;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setAppointmentDate(LocalDate appointmentDate) {
+        this.appointmentDate = appointmentDate;
     }
 
-    public LocalTime getHoraInicio() {
-        return horaInicio;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setHoraInicio(LocalTime horaInicio) {
-        this.horaInicio = horaInicio;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
-    public LocalTime getHoraFim() {
-        return horaFim;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public void setHoraFim(LocalTime horaFim) {
-        this.horaFim = horaFim;
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 }
