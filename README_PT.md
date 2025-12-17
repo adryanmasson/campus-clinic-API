@@ -110,7 +110,7 @@ Sistema completo de gestão para clínicas médicas, desenvolvido com **Spring B
 https://clinica-api-adryan.azurewebsites.net
 ```
 
-Todos os endpoints são prefixados automaticamente com `/api` pela configuração do Spring Security.
+Todos os endpoints são prefixados automaticamente com `/api` pela configuração `spring.mvc.servlet.path=/api` no application.properties.
 
 ### 🩺 Especialidades Médicas
 
@@ -330,19 +330,12 @@ GET /api/appointments
   "message": "Appointments listed successfully.",
   "data": [
     {
-      "appointmentId": 1,
-      "patient": {
-        "patientId": 1,
-        "name": "John Smith"
-      },
-      "doctor": {
-        "doctorId": 1,
-        "name": "Dr. James Anderson",
-        "specialty": "General Medicine"
-      },
-      "appointmentDate": "2025-01-15",
-      "startTime": "09:00:00",
-      "endTime": "09:30:00",
+      "id": 1,
+      "nomePaciente": "John Smith",
+      "nomeMedico": "Dr. James Anderson",
+      "dataConsulta": "2025-01-15",
+      "horaInicio": "09:00:00",
+      "horaFim": "09:30:00",
       "status": "SCHEDULED"
     }
   ]
@@ -371,17 +364,19 @@ GET /api/appointments?status={SCHEDULED|COMPLETED|CANCELLED}
 
 #### Agendar Nova Consulta
 ```http
-POST /api/appointments
+POST /api/appointments/agendar
 Content-Type: application/json
 
 {
   "patientId": 1,
   "doctorId": 1,
-  "appointmentDate": "2025-01-15",
-  "startTime": "09:00:00",
-  "endTime": "09:30:00"
+  "data": "2025-01-15",
+  "horaInicio": "09:00:00",
+  "horaFim": "09:30:00"
 }
 ```
+
+> **Nota**: Os nomes dos campos usam mapeamento interno em português.
 
 #### Atualizar Consulta
 ```http
@@ -418,10 +413,9 @@ GET /api/medical-records
   "data": [
     {
       "recordId": 1,
-      "appointment": {
-        "appointmentId": 1,
-        "appointmentDate": "2024-12-10"
-      },
+      "appointmentId": 1,
+      "nomePaciente": "John Smith",
+      "nomeMedico": "Dr. James Anderson",
       "anamnesis": "Patient reports headache and fever for 2 days",
       "diagnosis": "Viral infection - Common cold",
       "prescription": "Rest, hydration, Paracetamol 500mg every 6 hours",
@@ -543,14 +537,23 @@ sqlcmd -S localhost -d campus_clinic -i sample_data_english.sql
 
 3. **Configure as variáveis de ambiente**
 
-Crie um arquivo `.env` ou configure variáveis de sistema:
-```bash
-SPRING_DATASOURCE_URL=jdbc:sqlserver://localhost:1433;database=campus_clinic;encrypt=false
-SPRING_DATASOURCE_USERNAME=seu_usuario
-SPRING_DATASOURCE_PASSWORD=sua_senha
+A aplicação usa variáveis de ambiente para configuração do banco de dados. Configure-as no seu sistema:
+
+**Windows (PowerShell):**
+```powershell
+$env:SPRING_DATASOURCE_URL="jdbc:sqlserver://localhost:1433;database=campus_clinic;encrypt=false"
+$env:SPRING_DATASOURCE_USERNAME="seu_usuario"
+$env:SPRING_DATASOURCE_PASSWORD="sua_senha"
 ```
 
-Ou edite `src/main/resources/application.properties`:
+**Linux/Mac:**
+```bash
+export SPRING_DATASOURCE_URL="jdbc:sqlserver://localhost:1433;database=campus_clinic;encrypt=false"
+export SPRING_DATASOURCE_USERNAME="seu_usuario"
+export SPRING_DATASOURCE_PASSWORD="sua_senha"
+```
+
+**Alternativa**: Edite `src/main/resources/application.properties` e substitua `${...}` pelos valores reais:
 ```properties
 spring.datasource.url=jdbc:sqlserver://localhost:1433;database=campus_clinic;encrypt=false
 spring.datasource.username=seu_usuario
