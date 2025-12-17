@@ -70,7 +70,8 @@ public class AppointmentService {
                         LocalDate appointmentDate, LocalTime startTime, LocalTime endTime) {
 
                 try {
-                        appointmentRepository.createAppointment(patientId, doctorId, appointmentDate, startTime, endTime);
+                        appointmentRepository.createAppointment(patientId, doctorId, appointmentDate, startTime,
+                                        endTime);
                 } catch (DataAccessException ex) {
                         Throwable cause = ex.getMostSpecificCause();
                         String message = cause != null ? cause.getMessage() : ex.getMessage();
