@@ -1,10 +1,10 @@
 package com.example.clinica.controllers;
 
-import com.example.clinica.dto.AgendarConsultaDTO;
+import com.example.clinica.dto.ScheduleAppointmentDTO;
 import com.example.clinica.dto.ApiResponse;
-import com.example.clinica.dto.AtualizarConsultaDTO;
-import com.example.clinica.dto.ConsultaDTO;
-import com.example.clinica.services.ConsultaService;
+import com.example.clinica.dto.UpdateAppointmentDTO;
+import com.example.clinica.dto.AppointmentDTO;
+import com.example.clinica.services.AppointmentService;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -21,55 +21,55 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointments")
-public class ConsultaController {
+public class AppointmentController {
 
-    private final ConsultaService consultaService;
+    private final AppointmentService consultaService;
 
-    public ConsultaController(ConsultaService consultaService) {
+    public AppointmentController(AppointmentService consultaService) {
         this.consultaService = consultaService;
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ConsultaDTO>>> listarConsultas() {
-        List<ConsultaDTO> consultas = consultaService.listarConsultas();
+    public ResponseEntity<ApiResponse<List<AppointmentDTO>>> listAppointments() {
+        List<AppointmentDTO> consultas = consultaService.listAppointments();
         String mensagem = consultas.isEmpty() ? "No appointments found." : "Appointments listed successfully.";
-        ApiResponse<List<ConsultaDTO>> body = ApiResponse.success(mensagem, consultas);
+        ApiResponse<List<AppointmentDTO>> body = ApiResponse.success(mensagem, consultas);
         return ResponseEntity.ok(body);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ConsultaDTO>> buscarConsultaPorId(@PathVariable Integer id) {
-        ConsultaDTO consulta = consultaService.buscarConsultaPorId(id);
-        ApiResponse<ConsultaDTO> body = ApiResponse.success("Appointment found successfully.", consulta);
+    public ResponseEntity<ApiResponse<AppointmentDTO>> buscarConsultaPorId(@PathVariable Integer id) {
+        AppointmentDTO appointment = consultaService.buscarConsultaPorId(id);
+        ApiResponse<AppointmentDTO> body = ApiResponse.success("Appointment found successfully.", appointment);
         return ResponseEntity.ok(body);
     }
 
     @PostMapping("/agendar")
-    public ResponseEntity<ApiResponse<ConsultaDTO>> agendarConsulta(@RequestBody AgendarConsultaDTO dto) {
-        ConsultaDTO consulta = consultaService.agendarConsulta(dto.getIdPaciente(), dto.getIdMedico(),
+    public ResponseEntity<ApiResponse<AppointmentDTO>> scheduleAppointment(@RequestBody ScheduleAppointmentDTO dto) {
+        AppointmentDTO appointment = consultaService.scheduleAppointment(dto.getIdPaciente(), dto.getIdMedico(),
                 dto.getData(), dto.getHoraInicio(), dto.getHoraFim());
-        return ResponseEntity.ok(ApiResponse.success("Appointment scheduled successfully", consulta));
+        return ResponseEntity.ok(ApiResponse.success("Appointment scheduled successfully", appointment));
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ConsultaDTO>> atualizar(
+    public ResponseEntity<ApiResponse<AppointmentDTO>> atualizar(
             @PathVariable Integer id,
-            @RequestBody AtualizarConsultaDTO dto) {
+            @RequestBody UpdateAppointmentDTO dto) {
 
-        ConsultaDTO consultaAtualizada = consultaService.atualizarConsulta(id, dto);
+        AppointmentDTO consultaAtualizada = consultaService.updateAppointment(id, dto);
         return ResponseEntity.ok(ApiResponse.success("Appointment updated successfully", consultaAtualizada));
     }
 
     @PutMapping("/{id}/cancelar")
-    public ResponseEntity<ApiResponse<ConsultaDTO>> cancelar(@PathVariable Integer id) {
-        ConsultaDTO consultaCancelada = consultaService.cancelarConsulta(id);
+    public ResponseEntity<ApiResponse<AppointmentDTO>> cancelar(@PathVariable Integer id) {
+        AppointmentDTO consultaCancelada = consultaService.cancelAppointment(id);
         return ResponseEntity.ok(ApiResponse.success("Appointment cancelled successfully", consultaCancelada));
     }
 
-    @GetMapping("/paciente/{id}")
-    public ResponseEntity<ApiResponse<List<ConsultaDTO>>> listarPorPaciente(@PathVariable Integer id) {
-        List<ConsultaDTO> consultas = consultaService.listarConsultasPorPaciente(id);
+    @GetMapping("/patient/{id}")
+    public ResponseEntity<ApiResponse<List<AppointmentDTO>>> listarPorPaciente(@PathVariable Integer id) {
+        List<AppointmentDTO> consultas = consultaService.listarConsultasPorPaciente(id);
 
         String mensagem = consultas.isEmpty()
                 ? "No appointments found for the patient."
@@ -78,9 +78,9 @@ public class ConsultaController {
         return ResponseEntity.ok(ApiResponse.success(mensagem, consultas));
     }
 
-    @GetMapping("/medico/{id}")
-    public ResponseEntity<ApiResponse<List<ConsultaDTO>>> listarPorMedico(@PathVariable Integer id) {
-        List<ConsultaDTO> consultas = consultaService.listarConsultasPorMedico(id);
+    @GetMapping("/doctor/{id}")
+    public ResponseEntity<ApiResponse<List<AppointmentDTO>>> listarPorMedico(@PathVariable Integer id) {
+        List<AppointmentDTO> consultas = consultaService.listarConsultasPorMedico(id);
 
         String mensagem = consultas.isEmpty()
                 ? "No appointments found for the doctor."
@@ -90,9 +90,9 @@ public class ConsultaController {
     }
 
     @GetMapping("/data/{data}")
-    public ResponseEntity<ApiResponse<List<ConsultaDTO>>> listarPorData(
+    public ResponseEntity<ApiResponse<List<AppointmentDTO>>> listarPorData(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
-        List<ConsultaDTO> consultas = consultaService.listarConsultasPorData(data);
+        List<AppointmentDTO> consultas = consultaService.listarConsultasPorData(data);
 
         String mensagem = consultas.isEmpty()
                 ? "No appointments found for this date."

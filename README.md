@@ -10,7 +10,7 @@
 
 **Complete medical clinic management system with RESTful API, appointment scheduling, electronic medical records, and automated audit logging.**
 
-[🌐 Live Demo](https://clinica-api-adryan.azurewebsites.net/api/especialidades) | [📖 Documentation](#-api-endpoints) | [🚀 Deploy](#-azure-deployment)
+[🌐 Live Demo](https://clinica-api-adryan.azurewebsites.net/api/specialties) | [📖 Documentation](#-api-endpoints) | [🚀 Deploy](#-azure-deployment)
 
 </div>
 
@@ -112,7 +112,7 @@ https://clinica-api-adryan.azurewebsites.net
 
 #### List All Specialties
 ```http
-GET /api/especialidades
+GET /api/specialties
 ```
 
 **Response (200 OK)**

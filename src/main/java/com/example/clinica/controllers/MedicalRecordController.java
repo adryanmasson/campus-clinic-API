@@ -5,52 +5,52 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.clinica.dto.ProntuarioDTO;
-import com.example.clinica.dto.CriarProntuarioDTO;
-import com.example.clinica.services.ProntuarioService;
+import com.example.clinica.dto.MedicalRecordDTO;
+import com.example.clinica.dto.CreateMedicalRecordDTO;
+import com.example.clinica.services.MedicalRecordService;
 import com.example.clinica.dto.ApiResponse;
-import com.example.clinica.dto.AtualizarProntuarioDTO;
+import com.example.clinica.dto.UpdateMedicalRecordDTO;
 
 @RestController
 @RequestMapping("/api/medical-records")
-public class ProntuarioController {
+public class MedicalRecordController {
 
-    private final ProntuarioService prontuarioService;
+    private final MedicalRecordService prontuarioService;
 
-    public ProntuarioController(ProntuarioService prontuarioService) {
+    public MedicalRecordController(MedicalRecordService prontuarioService) {
         this.prontuarioService = prontuarioService;
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProntuarioDTO>>> listarProntuarios() {
-        List<ProntuarioDTO> prontuarios = prontuarioService.listarProntuarios();
+    public ResponseEntity<ApiResponse<List<MedicalRecordDTO>>> listMedicalRecords() {
+        List<MedicalRecordDTO> prontuarios = prontuarioService.listMedicalRecords();
         String mensagem = prontuarios.isEmpty()
                 ? "No medical records found."
                 : "Medical records returned successfully.";
         return ResponseEntity.ok(ApiResponse.success(mensagem, prontuarios));
     }
 
-    @GetMapping("/consulta/{idConsulta}")
-    public ResponseEntity<ApiResponse<ProntuarioDTO>> buscarPorConsulta(@PathVariable Integer idConsulta) {
-        ProntuarioDTO dto = prontuarioService.buscarPorConsulta(idConsulta);
+    @GetMapping("/appointment/{appointmentId}")
+    public ResponseEntity<ApiResponse<MedicalRecordDTO>> findByAppointment(@PathVariable Integer appointmentId) {
+        MedicalRecordDTO dto = prontuarioService.findByAppointment(appointmentId);
         if (dto == null) {
             return ResponseEntity.status(404)
-                    .body(ApiResponse.error("Medical record not found for appointment " + idConsulta));
+                    .body(ApiResponse.error("Medical record not found for appointment " + appointmentId));
         }
         return ResponseEntity.ok(ApiResponse.success("Medical record returned successfully.", dto));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProntuarioDTO>> criarProntuario(@RequestBody CriarProntuarioDTO dto) {
-        ProntuarioDTO criado = prontuarioService.criarProntuario(dto);
+    public ResponseEntity<ApiResponse<MedicalRecordDTO>> createMedicalRecord(@RequestBody CreateMedicalRecordDTO dto) {
+        MedicalRecordDTO criado = prontuarioService.createMedicalRecord(dto);
         return ResponseEntity.status(201).body(ApiResponse.success("Medical record created successfully.", criado));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProntuarioDTO>> atualizarProntuario(
+    public ResponseEntity<ApiResponse<MedicalRecordDTO>> updateMedicalRecord(
             @PathVariable Integer id,
-            @RequestBody AtualizarProntuarioDTO dados) {
-        ProntuarioDTO prontuarioAtualizado = prontuarioService.atualizarProntuario(id, dados);
+            @RequestBody UpdateMedicalRecordDTO dados) {
+        MedicalRecordDTO prontuarioAtualizado = prontuarioService.updateMedicalRecord(id, dados);
         if (prontuarioAtualizado == null) {
             return ResponseEntity.notFound().build();
         }

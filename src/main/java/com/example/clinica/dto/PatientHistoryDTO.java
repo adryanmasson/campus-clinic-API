@@ -3,28 +3,28 @@ package com.example.clinica.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class HistoricoPacienteDTO {
+public class PatientHistoryDTO {
 
-    private Integer idConsulta;
+    private Integer appointmentId;
     private LocalDate dataConsulta;
     private LocalTime horaInicio;
     private LocalTime horaFim;
     private String statusConsulta;
-    private Integer idProntuario;
-    private String anamnese;
-    private String diagnostico;
-    private String prescricao;
+    private Integer recordId;
+    private String anamnesis;
+    private String diagnosis;
+    private String prescription;
     private String nomeMedico;
 
-    public HistoricoPacienteDTO() {
+    public PatientHistoryDTO() {
     }
 
     public Integer getIdConsulta() {
-        return idConsulta;
+        return appointmentId;
     }
 
-    public void setIdConsulta(Integer idConsulta) {
-        this.idConsulta = idConsulta;
+    public void setIdConsulta(Integer appointmentId) {
+        this.appointmentId = appointmentId;
     }
 
     public LocalDate getDataConsulta() {
@@ -59,36 +59,36 @@ public class HistoricoPacienteDTO {
         this.statusConsulta = statusConsulta;
     }
 
-    public Integer getIdProntuario() {
-        return idProntuario;
+    public Integer getRecordId() {
+        return recordId;
     }
 
-    public void setIdProntuario(Integer idProntuario) {
-        this.idProntuario = idProntuario;
+    public void setRecordId(Integer recordId) {
+        this.recordId = recordId;
     }
 
-    public String getAnamnese() {
-        return anamnese;
+    public String getAnamnesis() {
+        return anamnesis;
     }
 
-    public void setAnamnese(String anamnese) {
-        this.anamnese = anamnese;
+    public void setAnamnesis(String anamnesis) {
+        this.anamnesis = anamnesis;
     }
 
-    public String getDiagnostico() {
-        return diagnostico;
+    public String getDiagnosis() {
+        return diagnosis;
     }
 
-    public void setDiagnostico(String diagnostico) {
-        this.diagnostico = diagnostico;
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
     }
 
-    public String getPrescricao() {
-        return prescricao;
+    public String getPrescription() {
+        return prescription;
     }
 
-    public void setPrescricao(String prescricao) {
-        this.prescricao = prescricao;
+    public void setPrescription(String prescription) {
+        this.prescription = prescription;
     }
 
     public String getNomeMedico() {

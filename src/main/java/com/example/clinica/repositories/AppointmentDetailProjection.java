@@ -3,14 +3,14 @@ package com.example.clinica.repositories;
 import java.sql.Date;
 import java.sql.Time;
 
-public interface ConsultaDetalhadaProjection {
+public interface AppointmentDetailProjection {
     Integer getId();
 
-    Date getData_consulta();
+    Date getAppointmentDate();
 
-    Time getHora_inicio();
+    Time getStartTime();
 
-    Time getHora_fim();
+    Time getEndTime();
 
     String getStatus();
 

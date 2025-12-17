@@ -3,9 +3,9 @@ package com.example.clinica.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.example.clinica.models.Consulta;
+import com.example.clinica.models.Appointment;
 
-public class ConsultaDTO {
+public class AppointmentDTO {
     private Integer id;
     private String nomePaciente;
     private String nomeMedico;
@@ -14,7 +14,7 @@ public class ConsultaDTO {
     private LocalTime horaFim;
     private String status;
 
-    public ConsultaDTO(Integer id, String nomePaciente, String nomeMedico,
+    public AppointmentDTO(Integer id, String nomePaciente, String nomeMedico,
             LocalDate dataConsulta, LocalTime horaInicio,
             LocalTime horaFim, String status) {
         this.id = id;
@@ -26,18 +26,18 @@ public class ConsultaDTO {
         this.status = status;
     }
 
-    public ConsultaDTO() {
+    public AppointmentDTO() {
     }
 
-    public static ConsultaDTO fromEntity(Consulta consulta) {
-        ConsultaDTO dto = new ConsultaDTO();
-        dto.setId(consulta.getId_consulta());
-        dto.setNomePaciente(consulta.getPaciente().getNome());
-        dto.setNomeMedico(consulta.getMedico().getNome());
-        dto.setDataConsulta(consulta.getData_consulta());
-        dto.setHoraInicio(consulta.getHora_inicio());
-        dto.setHoraFim(consulta.getHora_fim());
-        dto.setStatus(consulta.getStatus().name());
+    public static AppointmentDTO fromEntity(Appointment appointment) {
+        AppointmentDTO dto = new AppointmentDTO();
+        dto.setId(appointment.getAppointmentId());
+        dto.setNomePaciente(appointment.getPatient().getName());
+        dto.setNomeMedico(appointment.getDoctor().getName());
+        dto.setDataConsulta(appointment.getAppointmentDate());
+        dto.setHoraInicio(appointment.getStartTime());
+        dto.setHoraFim(appointment.getEndTime());
+        dto.setStatus(appointment.getStatus().name());
         return dto;
     }
 

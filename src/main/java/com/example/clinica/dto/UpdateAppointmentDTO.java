@@ -3,7 +3,7 @@ package com.example.clinica.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class AtualizarConsultaDTO {
+public class UpdateAppointmentDTO {
     private LocalDate dataConsulta;
     private LocalTime horaInicio;
     private LocalTime horaFim;

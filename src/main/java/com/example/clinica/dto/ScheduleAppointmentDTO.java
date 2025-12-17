@@ -3,40 +3,40 @@ package com.example.clinica.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class AgendarConsultaDTO {
+public class ScheduleAppointmentDTO {
 
-    private Integer idPaciente;
-    private Integer idMedico;
+    private Integer patientId;
+    private Integer doctorId;
     private LocalDate data;
     private LocalTime horaInicio;
     private LocalTime horaFim;
 
-    public AgendarConsultaDTO() {
+    public ScheduleAppointmentDTO() {
     }
 
-    public AgendarConsultaDTO(Integer idPaciente, Integer idMedico, LocalDate data, LocalTime horaInicio,
+    public ScheduleAppointmentDTO(Integer patientId, Integer doctorId, LocalDate data, LocalTime horaInicio,
             LocalTime horaFim) {
-        this.idPaciente = idPaciente;
-        this.idMedico = idMedico;
+        this.patientId = patientId;
+        this.doctorId = doctorId;
         this.data = data;
         this.horaInicio = horaInicio;
         this.horaFim = horaFim;
     }
 
     public Integer getIdPaciente() {
-        return idPaciente;
+        return patientId;
     }
 
-    public void setIdPaciente(Integer idPaciente) {
-        this.idPaciente = idPaciente;
+    public void setIdPaciente(Integer patientId) {
+        this.patientId = patientId;
     }
 
     public Integer getIdMedico() {
-        return idMedico;
+        return doctorId;
     }
 
-    public void setIdMedico(Integer idMedico) {
-        this.idMedico = idMedico;
+    public void setIdMedico(Integer doctorId) {
+        this.doctorId = doctorId;
     }
 
     public LocalDate getData() {
