@@ -1,4 +1,4 @@
-# 🏥 Campus Clinic - Medical Management System
+# 🏥 Campus Clinic - Sistema de Gestão Médica
 
 <div align="center">
 
@@ -8,58 +8,60 @@
 ![Azure](https://img.shields.io/badge/Azure-Deployed-0078D4?style=for-the-badge&logo=microsoft-azure)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
-**Complete medical clinic management system with RESTful API, appointment scheduling, electronic medical records, and automated audit logging.**
+**Sistema completo de gestão de clínicas médicas com API RESTful, agendamento de consultas, prontuário eletrônico e auditoria automatizada.**
 
-[🌐 Live Demo](https://clinica-api-adryan.azurewebsites.net/api/especialidades) | [📖 Documentation](#-api-endpoints) | [🚀 Deploy](#-azure-deployment)
+[🌐 Demo Online](https://clinica-api-adryan.azurewebsites.net/api/specialties) | [📖 Documentação](#-endpoints-da-api) | [🚀 Deploy](#-azure-deployment)
+
+> ⚠️ **Aviso:** Demo hospedada no plano gratuito Azure App Service Free (F1) - pode levar 30-60 segundos para ativar na primeira requisição ou estar temporariamente offline devido à cota de 60 min/dia de CPU. Para testes locais, veja [Executando Localmente](#-executando-localmente).
 
 </div>
 
 ---
 
-## 📋 About the Project
+## 📋 Sobre o Projeto
 
-Complete management system for medical clinics, developed with **Spring Boot** and **SQL Server**, providing full control over:
+Sistema completo de gestão para clínicas médicas, desenvolvido com **Spring Boot** e **SQL Server**, oferecendo controle total sobre:
 
-- 👨‍⚕️ **Doctors and Medical Specialties Management**
-- 👤 **Patient Registration and Medical History**
-- 📅 **Appointment Scheduling and Management**
-- 📝 **Electronic Medical Records with Automatic Audit Trail**
-- 🔍 **Advanced Queries and Reports**
+- 👨‍⚕️ **Gestão de Médicos e Especialidades**
+- 👤 **Cadastro de Pacientes e Histórico Médico**
+- 📅 **Agendamento e Gerenciamento de Consultas**
+- 📝 **Prontuário Eletrônico com Trilha de Auditoria Automática**
+- 🔍 **Consultas Avançadas e Relatórios**
 
-### 🎯 Technical Highlights
+### 🎯 Destaques Técnicos
 
-- ✅ **RESTful Architecture** with standardized response patterns
-- ✅ **Complete Migration** from MySQL to SQL Server with optimizations
-- ✅ **Native Stored Procedures & Functions** in SQL Server
-- ✅ **Audit Triggers** for tracking medical record changes
-- ✅ **Automated Deployment** via GitHub Actions to Azure App Service
-- ✅ **Business Validations** at multiple layers (Database + Application)
-- ✅ **Spring Security** configured with CORS for frontend integration
+- ✅ **Arquitetura RESTful** com padrões de resposta padronizados
+- ✅ **Código 100% em Inglês** - todas as classes, métodos e endpoints em inglês
+- ✅ **Stored Procedures e Functions Nativas** em SQL Server
+- ✅ **Triggers de Auditoria** para rastreamento de alterações em prontuários
+- ✅ **Deploy Automatizado** via GitHub Actions para Azure App Service
+- ✅ **Validações de Negócio** em múltiplas camadas (Banco de Dados + Aplicação)
+- ✅ **Spring Security** configurado com CORS para integração com frontend
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Stack Tecnológico
 
 ### Backend
-- **Java 17** - LTS with modern features
-- **Spring Boot 3.4.5** - Main framework
-- **Spring Data JPA** - Persistence and ORM
-- **Spring Security** - Authentication and authorization
-- **Maven** - Dependency management
+- **Java 17** - LTS com recursos modernos
+- **Spring Boot 3.4.5** - Framework principal
+- **Spring Data JPA** - Persistência e ORM
+- **Spring Security** - Autenticação e autorização
+- **Maven** - Gerenciamento de dependências
 
-### Database
-- **Microsoft SQL Server** - Primary database
-- **T-SQL** - Custom procedures, functions, and triggers
-- **Azure SQL Database** - Cloud hosting
+### Banco de Dados
+- **Microsoft SQL Server** - Banco de dados principal
+- **T-SQL** - Procedures, functions e triggers customizados
+- **Azure SQL Database** - Hospedagem em nuvem
 
 ### DevOps & Cloud
-- **Azure App Service** - Application hosting
-- **GitHub Actions** - Automated CI/CD
-- **Azure CLI** - Infrastructure management
+- **Azure App Service** - Hospedagem da aplicação
+- **GitHub Actions** - CI/CD automatizado
+- **Azure CLI** - Gerenciamento de infraestrutura
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Arquitetura
 
 ```
 ┌─────────────────┐
@@ -78,7 +80,7 @@ Complete management system for medical clinics, developed with **Spring Boot** a
 │         │                                │
 │  ┌──────▼───────────────────────────┐  │
 │  │       Services Layer             │  │
-│  │  (Business Logic & Validation)   │  │
+│  │  (Lógica de Negócio)             │  │
 │  └──────┬───────────────────────────┘  │
 │         │                                │
 │  ┌──────▼───────────────────────────┐  │
@@ -90,11 +92,12 @@ Complete management system for medical clinics, developed with **Spring Boot** a
 ┌─────────────────────────────────────────┐
 │      SQL Server Database (Azure)        │
 ├─────────────────────────────────────────┤
-│  • Tabelas: especialidades, medicos,   │
-│    pacientes, consultas, prontuarios   │
-│  • Functions: calcular_idade            │
-│  • Procedures: criar_consulta           │
-│  • Triggers: auditoria_prontuario      │
+│  • Tables: specialties, doctors,        │
+│    patients, appointments,              │
+│    medical_records, medical_record_audit│
+│  • Functions: calculate_age             │
+│  • Procedures: create_appointment       │
+│  • Triggers: trg_medical_record_audit   │
 └─────────────────────────────────────────┘
 ```
 
@@ -102,28 +105,30 @@ Complete management system for medical clinics, developed with **Spring Boot** a
 
 ## 📚 Endpoints da API
 
-### Base URL
+### URL Base
 ```
 https://clinica-api-adryan.azurewebsites.net
 ```
+
+Todos os endpoints são prefixados automaticamente com `/api` pela configuração do Spring Security.
 
 ### 🩺 Especialidades Médicas
 
 #### Listar Todas as Especialidades
 ```http
-GET /api/especialidades
+GET /api/specialties
 ```
 
 **Resposta (200 OK)**
 ```json
 {
-  "status": "sucesso",
-  "mensagem": "Especialidades listadas com sucesso.",
+  "status": "success",
+  "message": "Specialties listed successfully.",
   "data": [
     {
-      "id_especialidade": 1,
-      "nome": "Cardiologia",
-      "descricao": "Especialidade médica que cuida do coração"
+      "specialtyId": 1,
+      "name": "General Medicine",
+      "description": "Treatment of common diseases and general health"
     }
   ]
 }
@@ -131,34 +136,34 @@ GET /api/especialidades
 
 #### Buscar Especialidade por ID
 ```http
-GET /api/especialidades/{id}
+GET /api/specialties/{id}
 ```
 
 #### Criar Nova Especialidade
 ```http
-POST /api/especialidades
+POST /api/specialties
 Content-Type: application/json
 
 {
-  "nome": "Cardiologia",
-  "descricao": "Especialidade médica que cuida do coração"
+  "name": "Cardiology",
+  "description": "Treatment of heart and cardiovascular system"
 }
 ```
 
 #### Atualizar Especialidade
 ```http
-PUT /api/especialidades/{id}
+PUT /api/specialties/{id}
 Content-Type: application/json
 
 {
-  "nome": "Cardiologia Clínica",
-  "descricao": "Descrição atualizada"
+  "name": "Clinical Cardiology",
+  "description": "Updated description"
 }
 ```
 
 #### Deletar Especialidade
 ```http
-DELETE /api/especialidades/{id}
+DELETE /api/specialties/{id}
 ```
 
 ---
@@ -167,27 +172,26 @@ DELETE /api/especialidades/{id}
 
 #### Listar Todos os Médicos
 ```http
-GET /api/medicos
+GET /api/doctors
 ```
 
 **Resposta (200 OK)**
 ```json
 {
-  "status": "sucesso",
-  "mensagem": "Médicos listados com sucesso.",
+  "status": "success",
+  "message": "Doctors listed successfully.",
   "data": [
     {
-      "id": 1,
-      "nome": "Dr. João Silva",
-      "crm": "CRM12345-SP",
-      "especialidade": {
-        "id": 1,
-        "nome": "Cardiologia"
+      "doctorId": 1,
+      "name": "Dr. James Anderson",
+      "medicalLicense": "CRM123456",
+      "specialty": {
+        "specialtyId": 1,
+        "name": "General Medicine"
       },
-      "dataNascimento": "1980-05-15",
-      "telefone": "(11) 98765-4321",
-      "idade": 45,
-      "ativo": true
+      "birthDate": "1975-04-20",
+      "phone": "11912345678",
+      "active": true
     }
   ]
 }
@@ -195,48 +199,47 @@ GET /api/medicos
 
 #### Buscar Médico por ID
 ```http
-GET /api/medicos/{id}
+GET /api/doctors/{id}
 ```
 
 #### Buscar Médicos por Especialidade
 ```http
-GET /api/medicos?especialidade={especialidade_id}
+GET /api/doctors?specialty={specialty_id}
 ```
 
 #### Cadastrar Novo Médico
 ```http
-POST /api/medicos
+POST /api/doctors
 Content-Type: application/json
 
 {
-  "nome": "Dr. João Silva",
-  "crm": "CRM12345-SP",
-  "fkIdEspecialidade": 1,
-  "dataNascimento": "1980-05-15",
-  "telefone": "(11) 98765-4321"
+  "name": "Dr. James Anderson",
+  "medicalLicense": "CRM123456",
+  "specialty": {
+    "specialtyId": 1
+  },
+  "birthDate": "1975-04-20",
+  "phone": "11912345678"
 }
 ```
 
 #### Atualizar Médico
 ```http
-PUT /api/medicos/{id}
+PUT /api/doctors/{id}
 Content-Type: application/json
 
 {
-  "nome": "Dr. João Silva Jr.",
-  "telefone": "(11) 98765-9999"
+  "name": "Dr. James Anderson Jr.",
+  "phone": "11999999999"
 }
 ```
 
-#### Desativar/Ativar Médico
+#### Verificar Disponibilidade do Médico
 ```http
-PATCH /api/medicos/{id}/status
-Content-Type: application/json
-
-{
-  "ativo": false
-}
+GET /api/doctors/{id}/availability?date={yyyy-MM-dd}
 ```
+
+**Resposta**: Horários disponíveis para consultas
 
 ---
 
@@ -244,25 +247,24 @@ Content-Type: application/json
 
 #### Listar Todos os Pacientes
 ```http
-GET /api/pacientes
+GET /api/patients
 ```
 
 **Resposta (200 OK)**
 ```json
 {
-  "status": "sucesso",
-  "mensagem": "Pacientes listados com sucesso.",
+  "status": "success",
+  "message": "Patients listed successfully.",
   "data": [
     {
-      "id": 1,
-      "nome": "José da Silva",
-      "cpf": "123.456.789-00",
-      "sexo": "M",
-      "dataNascimento": "1995-01-10",
-      "idade": 30,
-      "telefone": "(11) 91234-5678",
-      "email": "jose.silva@email.com",
-      "logradouro": "Rua das Flores, 123"
+      "patientId": 1,
+      "name": "John Smith",
+      "gender": "M",
+      "cpf": "12345678901",
+      "birthDate": "1990-05-15",
+      "phone": "11987654321",
+      "address": "123 Main St",
+      "email": "john.smith@email.com"
     }
   ]
 }
@@ -270,40 +272,47 @@ GET /api/pacientes
 
 #### Buscar Paciente por ID
 ```http
-GET /api/pacientes/{id}
+GET /api/patients/{id}
 ```
 
 #### Buscar Paciente por CPF
 ```http
-GET /api/pacientes/cpf/{cpf}
+GET /api/patients/cpf/{cpf}
 ```
 
 #### Cadastrar Novo Paciente
 ```http
-POST /api/pacientes
+POST /api/patients
 Content-Type: application/json
 
 {
-  "nome": "José da Silva",
-  "cpf": "123.456.789-00",
-  "sexo": "M",
-  "dataNascimento": "1995-01-10",
-  "telefone": "(11) 91234-5678",
-  "email": "jose.silva@email.com",
-  "logradouro": "Rua das Flores, 123"
+  "name": "John Smith",
+  "gender": "M",
+  "cpf": "12345678901",
+  "birthDate": "1990-05-15",
+  "phone": "11987654321",
+  "address": "123 Main St",
+  "email": "john.smith@email.com"
 }
 ```
 
 #### Atualizar Paciente
 ```http
-PUT /api/pacientes/{id}
+PUT /api/patients/{id}
 Content-Type: application/json
 
 {
-  "telefone": "(11) 99999-9999",
-  "email": "novo.email@email.com"
+  "phone": "11999999999",
+  "email": "new.email@email.com"
 }
 ```
+
+#### Obter Histórico do Paciente
+```http
+GET /api/patients/{id}/history
+```
+
+**Resposta**: Histórico médico completo com consultas e prontuários
 
 ---
 
@@ -311,83 +320,86 @@ Content-Type: application/json
 
 #### Listar Todas as Consultas
 ```http
-GET /api/consultas
+GET /api/appointments
 ```
 
 **Resposta (200 OK)**
 ```json
 {
-  "status": "sucesso",
-  "mensagem": "Consultas listadas com sucesso.",
+  "status": "success",
+  "message": "Appointments listed successfully.",
   "data": [
     {
-      "id": 1,
-      "paciente": {
-        "id": 1,
-        "nome": "José da Silva"
+      "appointmentId": 1,
+      "patient": {
+        "patientId": 1,
+        "name": "John Smith"
       },
-      "medico": {
-        "id": 1,
-        "nome": "Dr. João Silva",
-        "especialidade": "Cardiologia"
+      "doctor": {
+        "doctorId": 1,
+        "name": "Dr. James Anderson",
+        "specialty": "General Medicine"
       },
-      "dataConsulta": "2025-12-20",
-      "horaInicio": "09:00:00",
-      "horaFim": "10:00:00",
-      "status": "AGENDADA"
+      "appointmentDate": "2025-01-15",
+      "startTime": "09:00:00",
+      "endTime": "09:30:00",
+      "status": "SCHEDULED"
     }
   ]
 }
 ```
 
-#### Buscar Consultas de um Paciente
+#### Buscar Consultas por Paciente
 ```http
-GET /api/consultas?paciente={paciente_id}
+GET /api/appointments?patient={patient_id}
 ```
 
-#### Buscar Consultas de um Médico
+#### Buscar Consultas por Médico
 ```http
-GET /api/consultas?medico={medico_id}
+GET /api/appointments?doctor={doctor_id}
 ```
 
 #### Buscar Consultas por Data
 ```http
-GET /api/consultas?data={yyyy-MM-dd}
+GET /api/appointments?date={yyyy-MM-dd}
 ```
 
 #### Buscar Consultas por Status
 ```http
-GET /api/consultas?status={AGENDADA|REALIZADA|CANCELADA}
+GET /api/appointments?status={SCHEDULED|COMPLETED|CANCELLED}
 ```
 
 #### Agendar Nova Consulta
 ```http
-POST /api/consultas
+POST /api/appointments
 Content-Type: application/json
 
 {
-  "fkIdPaciente": 1,
-  "fkIdMedico": 1,
-  "dataConsulta": "2025-12-20",
-  "horaInicio": "09:00:00",
-  "horaFim": "10:00:00"
+  "patientId": 1,
+  "doctorId": 1,
+  "appointmentDate": "2025-01-15",
+  "startTime": "09:00:00",
+  "endTime": "09:30:00"
 }
 ```
 
-#### Atualizar Status da Consulta
+#### Atualizar Consulta
 ```http
-PATCH /api/consultas/{id}/status
+PUT /api/appointments/{id}
 Content-Type: application/json
 
 {
-  "status": "REALIZADA"
+  "appointmentDate": "2025-01-16",
+  "startTime": "10:00:00"
 }
 ```
 
 #### Cancelar Consulta
 ```http
-DELETE /api/consultas/{id}
+DELETE /api/appointments/{id}
 ```
+
+> **Nota**: O cancelamento altera o status para CANCELLED e preserva o registro para auditoria
 
 ---
 
@@ -395,25 +407,25 @@ DELETE /api/consultas/{id}
 
 #### Listar Todos os Prontuários
 ```http
-GET /api/prontuarios
+GET /api/medical-records
 ```
 
 **Resposta (200 OK)**
 ```json
 {
-  "status": "sucesso",
-  "mensagem": "Prontuários listados com sucesso.",
+  "status": "success",
+  "message": "Medical records returned successfully.",
   "data": [
     {
-      "id": 1,
-      "consulta": {
-        "id": 1,
-        "data": "2025-12-20"
+      "recordId": 1,
+      "appointment": {
+        "appointmentId": 1,
+        "appointmentDate": "2024-12-10"
       },
-      "anamnese": "Paciente relata dores no peito há 3 dias",
-      "diagnostico": "Suspeita de angina",
-      "prescricao": "Repouso e acompanhamento cardiológico",
-      "dataRegistro": "2025-12-17"
+      "anamnesis": "Patient reports headache and fever for 2 days",
+      "diagnosis": "Viral infection - Common cold",
+      "prescription": "Rest, hydration, Paracetamol 500mg every 6 hours",
+      "recordDate": "2024-12-10"
     }
   ]
 }
@@ -421,41 +433,39 @@ GET /api/prontuarios
 
 #### Buscar Prontuário por ID
 ```http
-GET /api/prontuarios/{id}
+GET /api/medical-records/{id}
 ```
 
-#### Buscar Histórico Completo de um Paciente
+#### Buscar Prontuário por Consulta
 ```http
-GET /api/prontuarios/paciente/{paciente_id}
+GET /api/medical-records/appointment/{appointment_id}
 ```
-
-**Retorna**: Todas as consultas e prontuários do paciente com informações de médicos e especialidades.
 
 #### Criar Novo Prontuário
 ```http
-POST /api/prontuarios
+POST /api/medical-records
 Content-Type: application/json
 
 {
-  "fkIdConsulta": 1,
-  "anamnese": "Paciente relata...",
-  "diagnostico": "Hipótese diagnóstica...",
-  "prescricao": "Medicação prescrita..."
+  "appointmentId": 1,
+  "anamnesis": "Patient reports...",
+  "diagnosis": "Diagnostic hypothesis...",
+  "prescription": "Prescribed medication..."
 }
 ```
 
 #### Atualizar Prontuário
 ```http
-PUT /api/prontuarios/{id}
+PUT /api/medical-records/{id}
 Content-Type: application/json
 
 {
-  "diagnostico": "Diagnóstico atualizado",
-  "prescricao": "Nova prescrição"
+  "diagnosis": "Updated diagnosis",
+  "prescription": "New prescription"
 }
 ```
 
-> **⚠️ Importante**: Todas as alterações em prontuários são registradas automaticamente na tabela de auditoria através de um trigger no banco de dados.
+> **⚠️ Importante**: Todas as alterações em prontuários são automaticamente registradas na tabela de auditoria através de um trigger no banco de dados.
 
 ---
 
@@ -463,81 +473,88 @@ Content-Type: application/json
 
 ### Tabelas Principais
 
-- **`especialidades`** - Especialidades médicas (Cardiologia, Dermatologia, etc.)
-- **`medicos`** - Cadastro de médicos com CRM e especialidade
-- **`pacientes`** - Cadastro de pacientes com dados pessoais e de contato
-- **`consultas`** - Agendamentos de consultas médicas
-- **`prontuarios`** - Prontuários eletrônicos vinculados a consultas
-- **`auditoria_prontuario`** - Histórico de alterações em prontuários
+- **`specialties`** - Especialidades médicas (General Medicine, Cardiology, etc.)
+- **`doctors`** - Cadastro de médicos com CRM e especialidade
+- **`patients`** - Cadastro de pacientes com dados pessoais e de contato
+- **`appointments`** - Agendamentos de consultas médicas
+- **`medical_records`** - Prontuários eletrônicos vinculados a consultas
+- **`medical_record_audit`** - Histórico de alterações em prontuários
 
 ### Functions e Procedures
 
-#### Function: `dbo.calcular_idade`
+#### Function: `dbo.calculate_age`
 Calcula a idade de uma pessoa baseada na data de nascimento.
 
 ```sql
-SELECT dbo.calcular_idade('1995-01-10') AS idade
--- Retorna: 30
+SELECT dbo.calculate_age('1990-05-15') AS age
+-- Retorna: 35
 ```
 
-#### Stored Procedure: `dbo.criar_consulta`
+#### Stored Procedure: `dbo.create_appointment`
 Cria uma nova consulta com validações de negócio integradas.
 
 ```sql
-EXEC criar_consulta 
-  @id_paciente = 1,
-  @id_medico = 1,
-  @data = '2025-12-20',
-  @hora_inicio = '10:00',
-  @hora_fim = '11:00'
+EXEC create_appointment 
+  @p_patient_id = 1,
+  @p_doctor_id = 1,
+  @p_appointment_date = '2025-01-15',
+  @p_start_time = '10:00',
+  @p_end_time = '10:30'
 ```
 
-#### Trigger: `trg_auditoria_prontuario_update`
+#### Trigger: `trg_medical_record_audit_update`
 Registra automaticamente todas as alterações em prontuários na tabela de auditoria.
 
 ---
 
-## 🚀 Como Executar Localmente
+## 🚀 Executando Localmente
 
 ### Pré-requisitos
 
 - ☕ **Java 17** ou superior
 - 📦 **Maven 3.8+**
-- 🗄️ **SQL Server 2019+** (ou LocalDB)
+- 🗄️ **SQL Server 2019+** (ou LocalDB/Docker)
 - 🔧 **IDE** (IntelliJ IDEA, Eclipse, VS Code)
 
 ### Passos
 
 1. **Clone o repositório**
 ```bash
-git clone https://github.com/adryanmasson/clinica-API.git
-cd clinica-API
+git clone https://github.com/adryanmasson/campus-clinic-api.git
+cd campus-clinic-api
 ```
 
 2. **Configure o banco de dados**
 
 Crie um banco de dados SQL Server:
 ```sql
-CREATE DATABASE clinica_do_campus;
+CREATE DATABASE campus_clinic;
 ```
 
 Execute o script de schema:
 ```bash
-sqlcmd -S localhost -d clinica_do_campus -i clinica_do_campus.sql
+sqlcmd -S localhost -d campus_clinic -i campus_clinic_schema.sql
 ```
 
 (Opcional) Popule com dados de exemplo:
 ```bash
-sqlcmd -S localhost -d clinica_do_campus -i dados_exemplo.sql
+sqlcmd -S localhost -d campus_clinic -i sample_data_english.sql
 ```
 
 3. **Configure as variáveis de ambiente**
 
-Crie um arquivo `.env` ou configure no sistema:
+Crie um arquivo `.env` ou configure variáveis de sistema:
 ```bash
-DB_URL=jdbc:sqlserver://localhost:1433;database=clinica_do_campus;encrypt=false
-DB_USERNAME=seu_usuario
-DB_PASSWORD=sua_senha
+SPRING_DATASOURCE_URL=jdbc:sqlserver://localhost:1433;database=campus_clinic;encrypt=false
+SPRING_DATASOURCE_USERNAME=seu_usuario
+SPRING_DATASOURCE_PASSWORD=sua_senha
+```
+
+Ou edite `src/main/resources/application.properties`:
+```properties
+spring.datasource.url=jdbc:sqlserver://localhost:1433;database=campus_clinic;encrypt=false
+spring.datasource.username=seu_usuario
+spring.datasource.password=sua_senha
 ```
 
 4. **Compile e execute**
@@ -546,14 +563,19 @@ mvn clean package
 java -jar target/clinica-0.0.1-SNAPSHOT.jar
 ```
 
+Ou rode diretamente com Maven:
+```bash
+mvn spring-boot:run
+```
+
 5. **Acesse a API**
 ```
-http://localhost:8080/api/especialidades
+http://localhost:8080/api/specialties
 ```
 
 ---
 
-## ☁️ Deploy no Azure
+## ☁️ Azure Deployment
 
 Este projeto está configurado para deploy automatizado no **Azure App Service** através de **GitHub Actions**.
 
@@ -562,40 +584,81 @@ Este projeto está configurado para deploy automatizado no **Azure App Service**
 O workflow `.github/workflows/main_clinica-api-adryan.yml` automatiza:
 
 1. ✅ **Build** do projeto com Maven
-2. ✅ **Testes** automatizados
+2. ✅ **Empacotamento** como JAR executável
 3. ✅ **Deploy** para Azure App Service
 4. ✅ **Verificação** de saúde da aplicação
 
 ### Variáveis de Ambiente no Azure
 
-Configure no Azure Portal (App Service → Configuration):
+Configure no Azure Portal (App Service → Configuration → Application settings):
 
 ```
-DB_URL=jdbc:sqlserver://seu-servidor.database.windows.net:1433;database=clinica_do_campus;encrypt=true
-DB_USERNAME=seu_usuario
-DB_PASSWORD=sua_senha
+SPRING_DATASOURCE_URL=jdbc:sqlserver://seu-servidor.database.windows.net:1433;database=campus_clinic;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+SPRING_DATASOURCE_USERNAME=seu_usuario
+SPRING_DATASOURCE_PASSWORD=sua_senha
 ```
 
 ### Infraestrutura Azure
 
-- **App Service**: Plan Gratuito F1 - Brazil South
-- **Azure SQL Database**: GeneralPurpose Gen5 (2 vCores) - West US 2
+- **App Service**: Plano Gratuito F1 - Brazil South
+- **Azure SQL Database**: GeneralPurpose Gen5 - West US 2
+- **Database Server**: clinica-campus-banco.database.windows.net
+
+### Comandos de Deploy (Azure CLI)
+
+```bash
+# Login no Azure
+az login
+
+# Atualizar string de conexão do banco
+az webapp config appsettings set \
+  --name clinica-api-adryan \
+  --resource-group clinica-api-adryan_group \
+  --settings SPRING_DATASOURCE_URL="jdbc:sqlserver://..."
+
+# Reiniciar app service
+az webapp restart \
+  --name clinica-api-adryan \
+  --resource-group clinica-api-adryan_group
+```
 
 ---
 
-## 🧪 Testes
+## 📁 Estrutura do Projeto
 
-### Executar Testes
-```bash
-mvn test
 ```
-
-### Cobertura de Testes
-```bash
-mvn test jacoco:report
+campus-clinic-api/
+├── src/
+│   ├── main/
+│   │   ├── java/com/example/clinica/
+│   │   │   ├── controllers/          # Endpoints REST
+│   │   │   │   ├── SpecialtyController.java
+│   │   │   │   ├── DoctorController.java
+│   │   │   │   ├── PatientController.java
+│   │   │   │   ├── AppointmentController.java
+│   │   │   │   └── MedicalRecordController.java
+│   │   │   ├── models/               # Entidades JPA
+│   │   │   │   ├── Specialty.java
+│   │   │   │   ├── Doctor.java
+│   │   │   │   ├── Patient.java
+│   │   │   │   ├── Appointment.java
+│   │   │   │   ├── MedicalRecord.java
+│   │   │   │   ├── AppointmentStatus.java
+│   │   │   │   └── Gender.java
+│   │   │   ├── repositories/         # Camada de acesso a dados
+│   │   │   ├── services/             # Lógica de negócio
+│   │   │   ├── dto/                  # Objetos de transferência
+│   │   │   ├── exceptions/           # Tratamento de exceções
+│   │   │   ├── SecurityConfig.java   # Configuração de segurança
+│   │   │   └── WebConfig.java        # Configuração CORS
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/                         # Testes unitários
+├── campus_clinic_schema.sql          # Schema do banco
+├── sample_data_english.sql           # Dados de exemplo
+├── pom.xml                           # Dependências Maven
+└── README.md                         # Este arquivo
 ```
-
-> **Nota**: Testes de integração com Testcontainers foram removidos devido a incompatibilidades com Windows. Recomendamos testes manuais ou uso de ambiente Linux para testes de integração.
 
 ---
 
