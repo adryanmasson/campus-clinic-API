@@ -21,16 +21,16 @@ public class Paciente {
 
     @Column(name = "cpf")
     private String cpf;
-    
+
     @Column(name = "birth_date")
     private Date data_nascimento;
-    
+
     @Column(name = "phone")
     private String telefone;
-    
+
     @Column(name = "address")
     private String logradouro;
-    
+
     @Column(name = "email")
     private String email;
 
