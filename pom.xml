@@ -62,10 +62,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
@@ -74,11 +70,7 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.32</version> <!-- ou a versão mais recente disponível -->
-		</dependency>
+
 
 		<!-- Microsoft SQL Server JDBC driver (adicionado para compatibilidade com SQL Server). -->
 		<dependency>
