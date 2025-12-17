@@ -4,37 +4,41 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@NamedStoredProcedureQuery(name = "Consulta.criar_consulta", procedureName = "criar_consulta", parameters = {
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "id_paciente", type = Integer.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "id_medico", type = Integer.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "data_consulta", type = java.time.LocalDate.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "hora_inicio", type = java.time.LocalTime.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "hora_fim", type = java.time.LocalTime.class)
+@NamedStoredProcedureQuery(name = "Consulta.criar_consulta", procedureName = "create_appointment", parameters = {
+        @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_patient_id", type = Integer.class),
+        @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_doctor_id", type = Integer.class),
+        @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_appointment_date", type = java.time.LocalDate.class),
+        @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_start_time", type = java.time.LocalTime.class),
+        @StoredProcedureParameter(mode = ParameterMode.IN, name = "p_end_time", type = java.time.LocalTime.class)
 })
 
 @Entity
-@Table(name = "consultas")
+@Table(name = "appointments")
 public class Consulta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "appointment_id")
     private Integer id_consulta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_id_paciente")
+    @JoinColumn(name = "patient_id")
     private Paciente paciente;
 
-    @Column(name = "fk_id_medico")
+    @Column(name = "doctor_id")
     private Integer fkIdMedico;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_id_medico", insertable = false, updatable = false)
+    @JoinColumn(name = "doctor_id", insertable = false, updatable = false)
     private Medico medico;
 
+    @Column(name = "appointment_date")
     private LocalDate data_consulta;
 
+    @Column(name = "start_time")
     private LocalTime hora_inicio;
 
+    @Column(name = "end_time")
     private LocalTime hora_fim;
 
     @Enumerated(EnumType.STRING)

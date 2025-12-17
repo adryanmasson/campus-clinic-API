@@ -29,12 +29,12 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
                         @Param("hora_inicio") java.time.LocalTime horaInicio,
                         @Param("hora_fim") java.time.LocalTime horaFim);
 
-        @Query(value = "SELECT TOP 1 * FROM consultas " +
-                        "WHERE fk_id_paciente = :idPaciente " +
-                        "  AND fk_id_medico = :idMedico " +
-                        "  AND data_consulta = :data " +
-                        "  AND hora_inicio = :horaInicio " +
-                        "  AND hora_fim = :horaFim ", nativeQuery = true)
+        @Query(value = "SELECT TOP 1 * FROM appointments " +
+                        "WHERE patient_id = :idPaciente " +
+                        "  AND doctor_id = :idMedico " +
+                        "  AND appointment_date = :data " +
+                        "  AND start_time = :horaInicio " +
+                        "  AND end_time = :horaFim ", nativeQuery = true)
         Optional<Consulta> findInserted(
                         @Param("idPaciente") Integer idPaciente,
                         @Param("idMedico") Integer idMedico,
@@ -42,58 +42,58 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
                         @Param("horaInicio") java.time.LocalTime horaInicio,
                         @Param("horaFim") java.time.LocalTime horaFim);
 
-        @Query(value = "SELECT c.* FROM consultas c " +
-                        "WHERE c.fk_id_medico = :idMedico " +
-                        "  AND c.data_consulta = :data " +
-                        "  AND ( (c.hora_inicio <= :novoInicio AND c.hora_fim > :novoInicio) " +
-                        "     OR (c.hora_inicio < :novoFim AND c.hora_fim >= :novoFim) " +
-                        "     OR (c.hora_inicio >= :novoInicio AND c.hora_fim <= :novoFim) ) " +
-                        "  AND c.id_consulta <> :excludeId", nativeQuery = true)
+        @Query(value = "SELECT c.* FROM appointments c " +
+                        "WHERE c.doctor_id = :idMedico " +
+                        "  AND c.appointment_date = :data " +
+                        "  AND ( (c.start_time <= :novoInicio AND c.end_time > :novoInicio) " +
+                        "     OR (c.start_time < :novoFim AND c.end_time >= :novoFim) " +
+                        "     OR (c.start_time >= :novoInicio AND c.end_time <= :novoFim) ) " +
+                        "  AND c.appointment_id <> :excludeId", nativeQuery = true)
         List<Consulta> findByMedicoDataHora(@Param("idMedico") Integer idMedico,
                         @Param("data") LocalDate data,
                         @Param("novoInicio") LocalTime novoInicio,
                         @Param("novoFim") LocalTime novoFim,
                         @Param("excludeId") Integer excludeId);
 
-        @Query(value = "SELECT c.id_consulta AS id, c.data_consulta, c.hora_inicio, c.hora_fim, c.status, " +
-                        "p.nome AS nome_paciente, m.nome AS nome_medico " +
-                        "FROM consultas c " +
-                        "INNER JOIN pacientes p ON p.id_paciente = c.fk_id_paciente " +
-                        "INNER JOIN medicos m ON m.id_medico = c.fk_id_medico " +
-                        "WHERE c.id_consulta = :id", nativeQuery = true)
+        @Query(value = "SELECT c.appointment_id AS id, c.appointment_date, c.start_time, c.end_time, c.status, " +
+                        "p.name AS nome_paciente, m.name AS nome_medico " +
+                        "FROM appointments c " +
+                        "INNER JOIN patients p ON p.patient_id = c.patient_id " +
+                        "INNER JOIN doctors m ON m.doctor_id = c.doctor_id " +
+                        "WHERE c.appointment_id = :id", nativeQuery = true)
         ConsultaDetalhadaProjection buscarConsultaDetalhada(@Param("id") Integer id);
 
-        @Query(value = "SELECT c.id_consulta AS id, c.data_consulta, c.hora_inicio, c.hora_fim, c.status, " +
-                        "p.nome AS nome_paciente, m.nome AS nome_medico " +
-                        "FROM consultas c " +
-                        "INNER JOIN pacientes p ON p.id_paciente = c.fk_id_paciente " +
-                        "INNER JOIN medicos m ON m.id_medico = c.fk_id_medico " +
-                        "WHERE c.fk_id_medico = :idMedico", nativeQuery = true)
+        @Query(value = "SELECT c.appointment_id AS id, c.appointment_date, c.start_time, c.end_time, c.status, " +
+                        "p.name AS nome_paciente, m.name AS nome_medico " +
+                        "FROM appointments c " +
+                        "INNER JOIN patients p ON p.patient_id = c.patient_id " +
+                        "INNER JOIN doctors m ON m.doctor_id = c.doctor_id " +
+                        "WHERE c.doctor_id = :idMedico", nativeQuery = true)
         List<Map<String, Object>> buscarConsultasPorMedico(@Param("idMedico") Integer idMedico);
 
-        @Query(value = "SELECT c.id_consulta AS id, c.data_consulta, c.hora_inicio, c.hora_fim, c.status, " +
-                        "p.nome AS nome_paciente, m.nome AS nome_medico " +
-                        "FROM consultas c " +
-                        "INNER JOIN pacientes p ON p.id_paciente = c.fk_id_paciente " +
-                        "INNER JOIN medicos m ON m.id_medico = c.fk_id_medico " +
-                        "WHERE c.data_consulta = :data", nativeQuery = true)
+        @Query(value = "SELECT c.appointment_id AS id, c.appointment_date, c.start_time, c.end_time, c.status, " +
+                        "p.name AS nome_paciente, m.name AS nome_medico " +
+                        "FROM appointments c " +
+                        "INNER JOIN patients p ON p.patient_id = c.patient_id " +
+                        "INNER JOIN doctors m ON m.doctor_id = c.doctor_id " +
+                        "WHERE c.appointment_date = :data", nativeQuery = true)
         List<Map<String, Object>> buscarConsultasPorData(@Param("data") LocalDate data);
 
         @Query(value = """
                         SELECT
-                            c.id_consulta AS idConsulta,
-                            c.data_consulta AS dataConsulta,
-                            c.hora_inicio AS horaInicio,
-                            c.hora_fim AS horaFim,
+                            c.appointment_id AS idConsulta,
+                            c.appointment_date AS dataConsulta,
+                            c.start_time AS horaInicio,
+                            c.end_time AS horaFim,
                             c.status AS status,
-                            m.nome AS nomeMedico,
-                            p.nome AS nomePaciente
-                        FROM consultas c
-                        INNER JOIN medicos m ON m.id_medico = c.fk_id_medico
-                        INNER JOIN pacientes p ON p.id_paciente = c.fk_id_paciente
-                        WHERE c.fk_id_paciente = :idPaciente
-                          AND c.data_consulta >= DATEADD(MONTH, -:meses, CAST(GETDATE() AS DATE))
-                        ORDER BY c.data_consulta DESC
+                            m.name AS nomeMedico,
+                            p.name AS nomePaciente
+                        FROM appointments c
+                        INNER JOIN doctors m ON m.doctor_id = c.doctor_id
+                        INNER JOIN patients p ON p.patient_id = c.patient_id
+                        WHERE c.patient_id = :idPaciente
+                          AND c.appointment_date >= DATEADD(MONTH, -:meses, CAST(GETDATE() AS DATE))
+                        ORDER BY c.appointment_date DESC
                         """, nativeQuery = true)
         List<Map<String, Object>> relatorioConsultasUltimosMeses(
                         @Param("idPaciente") Integer idPaciente,
@@ -101,36 +101,36 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
 
         @Query(value = """
                         SELECT
-                            c.id_consulta AS idConsulta,
-                            c.data_consulta AS dataConsulta,
-                            c.hora_inicio AS horaInicio,
-                            c.hora_fim AS horaFim,
+                            c.appointment_id AS idConsulta,
+                            c.appointment_date AS dataConsulta,
+                            c.start_time AS horaInicio,
+                            c.end_time AS horaFim,
                             c.status AS status,
-                            m.nome AS nomeMedico,
-                            p.nome AS nomePaciente
-                        FROM consultas c
-                        INNER JOIN medicos m ON m.id_medico = c.fk_id_medico
-                        INNER JOIN pacientes p ON p.id_paciente = c.fk_id_paciente
-                        WHERE c.fk_id_medico = :idMedico
-                        ORDER BY c.data_consulta DESC
+                            m.name AS nomeMedico,
+                            p.name AS nomePaciente
+                        FROM appointments c
+                        INNER JOIN doctors m ON m.doctor_id = c.doctor_id
+                        INNER JOIN patients p ON p.patient_id = c.patient_id
+                        WHERE c.doctor_id = :idMedico
+                        ORDER BY c.appointment_date DESC
                         """, nativeQuery = true)
         List<Map<String, Object>> relatorioConsultasPorMedico(@Param("idMedico") Integer idMedico);
 
         @Query(value = """
                         SELECT TOP 50
-                            c.id_consulta AS idConsulta,
-                            c.data_consulta AS dataConsulta,
-                            c.hora_inicio AS horaInicio,
-                            c.hora_fim AS horaFim,
+                            c.appointment_id AS idConsulta,
+                            c.appointment_date AS dataConsulta,
+                            c.start_time AS horaInicio,
+                            c.end_time AS horaFim,
                             c.status AS status,
-                            p.nome AS nomePaciente,
-                            m.nome AS nomeMedico
-                        FROM consultas c
-                        INNER JOIN pacientes p ON p.id_paciente = c.fk_id_paciente
-                        INNER JOIN medicos m ON m.id_medico = c.fk_id_medico
-                        WHERE c.fk_id_medico = :idMedico
-                          AND (c.data_consulta > CAST(GETDATE() AS DATE) OR (c.data_consulta = CAST(GETDATE() AS DATE) AND c.hora_fim >= CAST(GETDATE() AS time)))
-                        ORDER BY c.data_consulta ASC, c.hora_inicio ASC
+                            p.name AS nomePaciente,
+                            m.name AS nomeMedico
+                        FROM appointments c
+                        INNER JOIN patients p ON p.patient_id = c.patient_id
+                        INNER JOIN doctors m ON m.doctor_id = c.doctor_id
+                        WHERE c.doctor_id = :idMedico
+                          AND (c.appointment_date > CAST(GETDATE() AS DATE) OR (c.appointment_date = CAST(GETDATE() AS DATE) AND c.end_time >= CAST(GETDATE() AS time)))
+                        ORDER BY c.appointment_date ASC, c.start_time ASC
 
                         """, nativeQuery = true)
         List<Map<String, Object>> relatorioProximasConsultas(@Param("idMedico") Integer idMedico);

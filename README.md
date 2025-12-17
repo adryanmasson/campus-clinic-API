@@ -90,11 +90,12 @@ Complete management system for medical clinics, developed with **Spring Boot** a
 ┌─────────────────────────────────────────┐
 │      SQL Server Database (Azure)        │
 ├─────────────────────────────────────────┤
-│  • Tables: especialidades, medicos,     │
-│    pacientes, consultas, prontuarios    │
-│  • Functions: calcular_idade            │
-│  • Procedures: criar_consulta           │
-│  • Triggers: auditoria_prontuario       │
+│  • Tables: specialties, doctors,        │
+│    patients, appointments,              │
+│    medical_records, medical_record_audit│
+│  • Functions: calculate_age             │
+│  • Procedures: create_appointment       │
+│  • Triggers: trg_medical_record_audit   │
 └─────────────────────────────────────────┘
 ```
 
@@ -463,36 +464,36 @@ Content-Type: application/json
 
 ### Main Tables
 
-- **`especialidades`** - Medical specialties (Cardiology, Dermatology, etc.)
-- **`medicos`** - Doctor registry with medical license and specialty
-- **`pacientes`** - Patient registry with personal and contact information
-- **`consultas`** - Medical appointment bookings
-- **`prontuarios`** - Electronic medical records linked to appointments
-- **`auditoria_prontuario`** - Medical record change history
+- **`specialties`** - Medical specialties (Cardiology, Dermatology, etc.)
+- **`doctors`** - Doctor registry with medical license and specialty
+- **`patients`** - Patient registry with personal and contact information
+- **`appointments`** - Medical appointment bookings
+- **`medical_records`** - Electronic medical records linked to appointments
+- **`medical_record_audit`** - Medical record change history
 
 ### Functions and Procedures
 
-#### Function: `dbo.calcular_idade`
+#### Function: `dbo.calculate_age`
 Calculates a person's age based on their date of birth.
 
 ```sql
-SELECT dbo.calcular_idade('1995-01-10') AS idade
+SELECT dbo.calculate_age('1995-01-10') AS age
 -- Returns: 30
 ```
 
-#### Stored Procedure: `dbo.criar_consulta`
+#### Stored Procedure: `dbo.create_appointment`
 Creates a new appointment with integrated business validations.
 
 ```sql
-EXEC criar_consulta 
-  @id_paciente = 1,
-  @id_medico = 1,
-  @data = '2025-12-20',
-  @hora_inicio = '10:00',
-  @hora_fim = '11:00'
+EXEC create_appointment 
+  @patient_id = 1,
+  @doctor_id = 1,
+  @appointment_date = '2025-12-20',
+  @start_time = '10:00',
+  @end_time = '11:00'
 ```
 
-#### Trigger: `trg_auditoria_prontuario_update`
+#### Trigger: `trg_medical_record_audit_update`
 Automatically logs all changes to medical records in the audit table.
 
 ---
@@ -578,9 +579,8 @@ DB_PASSWORD=your_password
 
 ### Azure Infrastructure
 
-- **App Service**: Basic B1 Plan
-- **Azure SQL Database**: GeneralPurpose Gen5 (2 vCores)
-- **Region**: West US 2
+- **App Service**: Free F1 Plan - Brazil South
+- **Azure SQL Database**: GeneralPurpose Gen5 (2 vCores) - West US 2
 
 ---
 

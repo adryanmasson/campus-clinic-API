@@ -5,22 +5,33 @@ import jakarta.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "pacientes")
+@Table(name = "patients")
 public class Paciente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "patient_id")
     private Integer id_paciente;
 
+    @Column(name = "name")
     private String nome;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 10)
+    @Column(name = "gender", length = 10)
     private Sexo sexo;
 
+    @Column(name = "cpf")
     private String cpf;
+    
+    @Column(name = "birth_date")
     private Date data_nascimento;
+    
+    @Column(name = "phone")
     private String telefone;
+    
+    @Column(name = "address")
     private String logradouro;
+    
+    @Column(name = "email")
     private String email;
 
     public Integer getId_paciente() {

@@ -14,37 +14,37 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
 
     Optional<Paciente> findByCpf(String cpf);
 
-    @Query(value = "SELECT dbo.calcular_idade(data_nascimento) FROM pacientes WHERE id_paciente = ?1", nativeQuery = true)
+    @Query(value = "SELECT dbo.calculate_age(birth_date) FROM patients WHERE patient_id = ?1", nativeQuery = true)
     Integer calcularIdade(Integer idPaciente);
 
     @Query(value = """
-                SELECT c.id_consulta AS idConsulta,
-                       c.data_consulta AS dataConsulta,
-                       c.hora_inicio AS horaInicio,
-                       c.hora_fim AS horaFim,
+                SELECT c.appointment_id AS idConsulta,
+                       c.appointment_date AS dataConsulta,
+                       c.start_time AS horaInicio,
+                       c.end_time AS horaFim,
                        c.status AS status,
-                       p.id_prontuario AS idProntuario,
-                       p.anamnese AS anamnese,
-                       p.diagnostico AS diagnostico,
-                       p.prescricao AS prescricao,
-                       m.nome AS nomeMedico
-                FROM consultas c
-                LEFT JOIN prontuarios p ON p.fk_id_consulta = c.id_consulta
-                JOIN medicos m ON m.id_medico = c.fk_id_medico
-                WHERE c.fk_id_paciente = :idPaciente
-                ORDER BY c.data_consulta DESC, c.hora_inicio DESC
+                       p.record_id AS idProntuario,
+                       p.anamnesis AS anamnese,
+                       p.diagnosis AS diagnostico,
+                       p.prescription AS prescricao,
+                       m.name AS nomeMedico
+                FROM appointments c
+                LEFT JOIN medical_records p ON p.appointment_id = c.appointment_id
+                JOIN doctors m ON m.doctor_id = c.doctor_id
+                WHERE c.patient_id = :idPaciente
+                ORDER BY c.appointment_date DESC, c.start_time DESC
             """, nativeQuery = true)
     List<Map<String, Object>> listarHistoricoPaciente(@Param("idPaciente") Integer idPaciente);
 
     @Query(value = """
                 SELECT
-                    e.nome AS especialidade,
-                    COUNT(DISTINCT p.id_paciente) AS totalPacientes
-                FROM consultas c
-                INNER JOIN pacientes p ON p.id_paciente = c.fk_id_paciente
-                INNER JOIN medicos m ON m.id_medico = c.fk_id_medico
-                INNER JOIN especialidades e ON e.id_especialidade = m.fk_id_especialidade
-                GROUP BY e.nome
+                    e.name AS especialidade,
+                    COUNT(DISTINCT p.patient_id) AS totalPacientes
+                FROM appointments c
+                INNER JOIN patients p ON p.patient_id = c.patient_id
+                INNER JOIN doctors m ON m.doctor_id = c.doctor_id
+                INNER JOIN specialties e ON e.specialty_id = m.specialty_id
+                GROUP BY e.name
                 ORDER BY totalPacientes DESC
             """, nativeQuery = true)
     List<Map<String, Object>> contarPacientesPorEspecialidade();

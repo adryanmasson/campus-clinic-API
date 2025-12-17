@@ -4,25 +4,31 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "medicos")
+@Table(name = "doctors")
 public class Medico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "doctor_id")
     private Integer id_medico;
 
+    @Column(name = "name")
     private String nome;
 
+    @Column(name = "medical_license")
     private String crm;
 
     @ManyToOne
-    @JoinColumn(name = "fk_id_especialidade")
+    @JoinColumn(name = "specialty_id")
     private Especialidade especialidade;
 
+    @Column(name = "birth_date")
     private LocalDate data_nascimento;
 
+    @Column(name = "phone")
     private String telefone;
 
+    @Column(name = "active")
     private Boolean ativo = true;
 
     public Integer getId_medico() {

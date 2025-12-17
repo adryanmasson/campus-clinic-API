@@ -4,25 +4,28 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "prontuarios")
+@Table(name = "medical_records")
 public class Prontuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_prontuario")
+    @Column(name = "record_id")
     private Integer idProntuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_id_consulta")
+    @JoinColumn(name = "appointment_id")
     private Consulta consulta;
 
+    @Column(name = "anamnesis")
     private String anamnese;
 
+    @Column(name = "diagnosis")
     private String diagnostico;
 
+    @Column(name = "prescription")
     private String prescricao;
 
-    @Column(name = "data_registro")
+    @Column(name = "record_date")
     private LocalDate dataRegistro;
 
     public Prontuario() {
