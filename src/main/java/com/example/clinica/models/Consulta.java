@@ -43,7 +43,7 @@ public class Consulta {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private ConsultaStatus status = ConsultaStatus.AGENDADA;
+    private ConsultaStatus status = ConsultaStatus.SCHEDULED;
 
     public Integer getId_consulta() {
         return id_consulta;

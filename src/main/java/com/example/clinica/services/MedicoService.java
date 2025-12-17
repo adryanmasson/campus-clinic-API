@@ -89,7 +89,7 @@ public class MedicoService {
         Medico medico = medicoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Médico não encontrado"));
 
-        boolean temConsultasAgendadas = consultaRepository.existsByFkIdMedicoAndStatus(id, ConsultaStatus.AGENDADA);
+        boolean temConsultasAgendadas = consultaRepository.existsByFkIdMedicoAndStatus(id, ConsultaStatus.SCHEDULED);
 
         if (temConsultasAgendadas) {
             throw new RuntimeException("Não é possível excluir o médico, pois ele possui consultas agendadas.");

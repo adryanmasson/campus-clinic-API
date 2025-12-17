@@ -157,11 +157,11 @@ public class ConsultaService {
                 Consulta consulta = consultaRepository.findById(idConsulta)
                                 .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
-                if (consulta.getStatus() == ConsultaStatus.CANCELADA) {
+                if (consulta.getStatus() == ConsultaStatus.CANCELLED) {
                         throw new RuntimeException("A consulta já está cancelada.");
                 }
 
-                consulta.setStatus(ConsultaStatus.CANCELADA);
+                consulta.setStatus(ConsultaStatus.CANCELLED);
                 consultaRepository.save(consulta);
 
                 ConsultaDetalhadaProjection proj = consultaRepository
