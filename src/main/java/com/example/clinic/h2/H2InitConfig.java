@@ -6,17 +6,17 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * Registers H2 aliases to mimic SQL Server-specific functions/procedures when
- * running with the in-memory H2 database (local/test). Safe to ignore in
- * production because it's conditional on the H2 driver being present.
+ * running with the in-memory H2 database (local/test). Em produção, este
+ * runner fica desabilitado via propriedade.
  */
 @Configuration
-@ConditionalOnClass(name = "org.h2.Driver")
+@ConditionalOnProperty(name = "app.h2.aliases.enabled", havingValue = "true", matchIfMissing = false)
 public class H2InitConfig {
 
     private final DataSource dataSource;
