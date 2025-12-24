@@ -1,19 +1,19 @@
-# 🏥 Campus Clinic - Medical Management System
+# 🏥 Campus Clinic API - Medical Management System
 
 <div align="center">
 
 ![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.5-brightgreen?style=for-the-badge&logo=spring)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-2019+-CC2927?style=for-the-badge&logo=microsoft-sql-server)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-Azure-CC2927?style=for-the-badge&logo=microsoft-sql-server)
 ![Azure](https://img.shields.io/badge/Azure-Deployed-0078D4?style=for-the-badge&logo=microsoft-azure)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
-[![CI](https://github.com/adryanmasson/campus-clinic-API/actions/workflows/ci.yml/badge.svg)](https://github.com/adryanmasson/campus-clinic-API/actions/workflows/ci.yml)
+[![CI/CD](https://github.com/adryanmasson/campus-clinic-API/actions/workflows/ci.yml/badge.svg)](https://github.com/adryanmasson/campus-clinic-API/actions/workflows/ci.yml)
 
-**Complete medical clinic management system with RESTful API, appointment scheduling, electronic medical records, and automated audit logging.**
+**Enterprise-grade medical clinic management system with RESTful API, intelligent appointment scheduling, comprehensive electronic medical records, and automated audit trails.**
 
-[🌐 Live Demo](https://clinic-api-app-b0g9f5faczgjcde8.brazilsouth-01.azurewebsites.net/api/specialties) | [📖 Documentation](#-api-endpoints) | [🚀 Deploy](#-azure-deployment)
+[🌐 Production](https://clinic-api-app.azurewebsites.net/api/specialties) | [🧪 Dev Environment](https://clinic-api-dev-app.azurewebsites.net/api/specialties) | [📖 Documentation](#-api-endpoints)
 
-> ⚠️ **Note:** Demo hosted on Azure App Service Free (F1) plan - may take 30-60 seconds to wake up on first request or be temporarily offline due to 60 min/day CPU quota. For local testing, see [Running Locally](#-running-locally).
+> 💡 **Multi-Environment Setup:** Production (free F1 plan) + Dev (B1 plan, Brazil South) with separate branches and automated CI/CD pipelines.
 
 </div>
 
@@ -31,14 +31,16 @@ Complete management system for medical clinics, developed with **Spring Boot** a
 
 ### 🎯 Technical Highlights
 
-- ✅ **RESTful Architecture** with standardized response patterns (ApiResponse pattern)
-- ✅ **Complete English API** - all endpoints and domain models in English
+- ✅ **RESTful Architecture** with standardized response patterns (ApiResponse wrapper)
+- ✅ **Dual Database Support** - Azure SQL Server (production) + H2 in-memory (local dev/testing)
+- ✅ **Complete English Codebase** - All code, comments, and documentation in English
 - ✅ **Centralized Exception Handling** with semantic exceptions (Conflict, BusinessRule, DuplicateResource)
-- ✅ **Native Stored Procedures & Functions** in SQL Server
-- ✅ **Audit Triggers** for tracking medical record changes
-- ✅ **Automated Deployment** via GitHub Actions to Azure App Service
-- ✅ **Business Validations** at multiple layers (Database + Application)
-- ✅ **Spring Security** configured with CORS for frontend integration
+- ✅ **Native SQL Server Features** - Stored procedures, functions, triggers, and computed columns
+- ✅ **Audit Trail System** - Automatic tracking of medical record changes via database triggers
+- ✅ **CI/CD Pipelines** - Automated build, test, and deployment via GitHub Actions
+- ✅ **Multi-Environment** - Separate prod/dev environments with branch-specific deployments
+- ✅ **Production-Ready** - HikariCP tuning, connection pooling, Always On (dev), Spring Security
+- ✅ **Business Validations** at multiple layers (Database constraints + Application logic)
 
 ### 🌟 Reviewer Highlights
 - **Fast to run**: one-command run via Docker.
@@ -53,19 +55,21 @@ Complete management system for medical clinics, developed with **Spring Boot** a
 ### Backend
 - **Java 17** - LTS with modern features
 - **Spring Boot 3.4.5** - Main framework
-- **Spring Data JPA** - Persistence and ORM
-- **Spring Security** - Authentication and authorization
-- **Maven** - Dependency management
+- **Spring Data JPA + Hibernate** - ORM and persistence
+- **Spring Security** - Authentication and CORS configuration
+- **HikariCP** - High-performance connection pooling
+- **Maven** - Build and dependency management
 
 ### Database
-- **Microsoft SQL Server** - Primary database
-- **T-SQL** - Custom procedures, functions, and triggers
-- **Azure SQL Database** - Cloud hosting
+- **Azure SQL Database** - Production database (cloud-hosted)
+- **H2 Database** - Local development and testing (in-memory, SQL Server mode)
+- **T-SQL** - Custom procedures, functions, triggers, and computed columns
 
 ### DevOps & Cloud
-- **Azure App Service** - Application hosting
-- **GitHub Actions** - Automated CI/CD
-- **Azure CLI** - Infrastructure management
+- **Azure App Service (Windows)** - Application hosting (prod F1, dev B1)
+- **GitHub Actions** - Automated CI/CD with separate prod/dev workflows
+- **Azure CLI** - Infrastructure provisioning and management
+- **Microsoft JDK 17** - Runtime on Azure App Service
 
 ---
 
@@ -588,7 +592,182 @@ Automatically logs all changes to medical records in the audit table.
 
 ---
 
-## 🚀 Running Locally
+## 🚀 Quick Start
+
+### Prerequisites
+- Java 17 or higher
+- Maven 3.6+
+- Azure SQL Database (or SQL Server 2019+)
+- Azure CLI (for deployment)
+
+### 🏃 Running Locally
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/adryanmasson/campus-clinic-API.git
+cd campus-clinic-API
+```
+
+2. **Run with H2 (in-memory database)**
+```bash
+mvn spring-boot:run
+```
+The API will start at `http://localhost:8080/api`
+
+3. **Run with Azure SQL Server**
+```bash
+# Set environment variables
+export SPRING_DATASOURCE_URL="jdbc:sqlserver://your-server.database.windows.net:1433;database=clinic_db;encrypt=true"
+export SPRING_DATASOURCE_USERNAME="your-username"
+export SPRING_DATASOURCE_PASSWORD="your-password"
+export SPRING_JPA_DDL_AUTO="update"
+
+mvn spring-boot:run
+```
+
+4. **Run with Docker (optional)**
+```bash
+# Build image
+docker build -t campus-clinic-api .
+
+# Run container
+docker run -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL="jdbc:sqlserver://..." \
+  -e SPRING_DATASOURCE_USERNAME="..." \
+  -e SPRING_DATASOURCE_PASSWORD="..." \
+  campus-clinic-api
+```
+
+### 🧪 Testing the API
+
+Once running, test with curl or Postman:
+```bash
+# List specialties
+curl http://localhost:8080/api/specialties
+
+# Get specific patient
+curl http://localhost:8080/api/patients/1
+
+# Create appointment
+curl -X POST http://localhost:8080/api/appointments \
+  -H "Content-Type: application/json" \
+  -d '{"patientId":1,"doctorId":1,"appointmentDate":"2025-01-15","startTime":"09:00","endTime":"10:00"}'
+```
+
+---
+
+## 🗄️ Database Setup
+
+### H2 (Local Development - Default)
+No setup required! The application automatically:
+- Creates an in-memory H2 database in SQL Server compatibility mode
+- Registers SQL Server-specific function aliases (`calculate_age`, `create_appointment`)
+- Runs JPA schema generation on startup
+
+### Azure SQL Server (Production)
+
+1. **Create Azure SQL Database**
+```bash
+az sql server create --resource-group clinic-api-resources \
+  --name clinic-db-server --location brazilsouth \
+  --admin-user adminuser --admin-password 'YourPassword123!'
+
+az sql db create --resource-group clinic-api-resources \
+  --server clinic-db-server --name clinic_db \
+  --service-objective Basic
+```
+
+2. **Run schema script** (first time only)
+```bash
+sqlcmd -S clinic-db-server.database.windows.net \
+  -d clinic_db -U adminuser -P 'YourPassword123!' \
+  -i campus_clinic_schema.sql
+```
+
+3. **Seed sample data** (optional)
+```bash
+sqlcmd -S clinic-db-server.database.windows.net \
+  -d clinic_db -U adminuser -P 'YourPassword123!' \
+  -I -i src/main/resources/db/sample_data_english.sql
+```
+
+---
+
+## ☁️ Azure Deployment
+
+### Environment Setup
+
+This project uses **two environments**:
+- **Production** (`main` branch) → `clinic-api-app` (F1 free tier)
+- **Development** (`dev` branch) → `clinic-api-dev-app` (B1 plan, Always On enabled)
+
+### Automated Deployment (GitHub Actions)
+
+Deployments trigger automatically on push to `main` or `dev` branches:
+
+1. **Production Pipeline** (`.github/workflows/clinic-api-deploy.yml`)
+   - Triggers on push to `main`
+   - Builds with Maven
+   - Deploys to `clinic-api-app`
+
+2. **Dev Pipeline** (`.github/workflows/clinic-api-deploy-dev.yml`)
+   - Triggers on push to `dev`
+   - Builds with Maven
+   - Deploys to `clinic-api-dev-app`
+
+### Required GitHub Secrets
+
+Set these in your repository settings (`Settings` → `Secrets and variables` → `Actions`):
+
+```
+AZURE_CREDENTIALS: {
+  "clientId": "<service-principal-client-id>",
+  "clientSecret": "<service-principal-secret>",
+  "subscriptionId": "<subscription-id>",
+  "tenantId": "<tenant-id>"
+}
+```
+
+### Azure App Service Configuration
+
+Both environments require these **Application Settings**:
+
+```bash
+# Database connection
+SPRING_DATASOURCE_URL=jdbc:sqlserver://clinic-db-server.database.windows.net:1433;database=clinic_db;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30
+SPRING_DATASOURCE_USERNAME=your-username
+SPRING_DATASOURCE_PASSWORD=your-password
+SPRING_DATASOURCE_DRIVER=com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+# JPA configuration
+SPRING_JPA_DDL_AUTO=update
+SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.SQLServerDialect
+
+# Deployment settings
+SPRING_SQL_INIT_MODE=never
+JAVA_OPTS=-Dserver.port=%HTTP_PLATFORM_PORT%
+```
+
+### Manual Deployment
+
+```bash
+# Login to Azure
+az login
+
+# Deploy to production
+az webapp deploy --resource-group clinic-api-resources \
+  --name clinic-api-app \
+  --src-path target/campus-clinic-api-0.0.1-SNAPSHOT.jar \
+  --type jar
+
+# Deploy to dev
+az webapp deploy --resource-group clinic-api-resources \
+  --name clinic-api-dev-app \
+  --src-path target/campus-clinic-api-0.0.1-SNAPSHOT.jar \
+  --type jar
+```
+
+---
 
 ### Prerequisites
 
@@ -714,11 +893,84 @@ az webapp restart \
 
 ---
 
-## 📁 Project Structure
+## 🏗️ Project Structure
 
 ```
 campus-clinic-api/
+├── .github/
+│   └── workflows/
+│       ├── ci.yml                         # Continuous Integration
+│       ├── clinic-api-deploy.yml          # Production deployment (main branch)
+│       ├── clinic-api-deploy-dev.yml      # Dev deployment (dev branch)
+│       └── auto-stop.yml                  # Auto-stop for dev after inactivity
 ├── src/
+│   ├── main/
+│   │   ├── java/com/example/clinic/
+│   │   │   ├── ClinicApplication.java            # Spring Boot entry point
+│   │   │   ├── SecurityConfig.java               # Security & CORS config
+│   │   │   ├── WebConfig.java                    # Web configuration
+│   │   │   ├── controllers/                      # REST API endpoints
+│   │   │   │   ├── AppointmentController.java
+│   │   │   │   ├── DoctorController.java
+│   │   │   │   ├── MedicalRecordController.java
+│   │   │   │   ├── PatientController.java
+│   │   │   │   └── SpecialtyController.java
+│   │   │   ├── dto/                              # Data Transfer Objects
+│   │   │   │   ├── ApiResponse.java              # Standard API response wrapper
+│   │   │   │   ├── AppointmentDTO.java
+│   │   │   │   ├── CreateMedicalRecordDTO.java
+│   │   │   │   ├── MedicalRecordDTO.java
+│   │   │   │   ├── PatientHistoryDTO.java
+│   │   │   │   ├── ScheduleAppointmentDTO.java
+│   │   │   │   ├── UpdateAppointmentDTO.java
+│   │   │   │   └── UpdateMedicalRecordDTO.java
+│   │   │   ├── exceptions/                       # Custom exceptions
+│   │   │   │   ├── AppointmentConflictException.java
+│   │   │   │   ├── BusinessRuleException.java
+│   │   │   │   ├── DuplicateResourceException.java
+│   │   │   │   └── RestExceptionHandler.java     # Global exception handler
+│   │   │   ├── h2/                               # H2 database support (dev only)
+│   │   │   │   ├── H2Functions.java              # SQL Server function mimics
+│   │   │   │   └── H2InitConfig.java             # H2 alias registration
+│   │   │   ├── models/                           # JPA entities
+│   │   │   │   ├── Appointment.java
+│   │   │   │   ├── AppointmentStatus.java
+│   │   │   │   ├── Doctor.java
+│   │   │   │   ├── Gender.java
+│   │   │   │   ├── GenderConverter.java          # JPA enum converter
+│   │   │   │   ├── MedicalRecord.java
+│   │   │   │   ├── Patient.java
+│   │   │   │   └── Specialty.java
+│   │   │   ├── repositories/                     # Data access layer
+│   │   │   │   ├── AppointmentRepository.java
+│   │   │   │   ├── AppointmentDetailProjection.java
+│   │   │   │   ├── DoctorRepository.java
+│   │   │   │   ├── MedicalRecordRepository.java
+│   │   │   │   ├── PatientRepository.java
+│   │   │   │   └── SpecialtyRepository.java
+│   │   │   └── services/                         # Business logic
+│   │   │       ├── AppointmentService.java
+│   │   │       ├── DoctorService.java
+│   │   │       ├── MedicalRecordService.java
+│   │   │       ├── PatientService.java
+│   │   │       └── SpecialtyService.java
+│   │   └── resources/
+│   │       ├── application.properties             # Main configuration
+│   │       └── db/
+│   │           └── sample_data_english.sql        # Sample data seed
+│   └── test/
+│       └── java/com/example/clinic/
+│           └── ContextLoadsTest.java              # Basic context test
+├── campus_clinic_schema.sql                       # Full database schema
+├── sample_data_english.sql                        # Sample data (standalone)
+├── docker-compose.yml                             # Docker setup (optional)
+├── Dockerfile                                     # Container definition
+├── pom.xml                                        # Maven dependencies
+├── .gitignore                                     # Git ignore rules
+└── README.md                                      # This file
+```
+
+---
 │   ├── main/
 │   │   ├── java/com/example/clinic/
 │   │   │   ├── controllers/          # REST endpoints (@RestController)

@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Profile;
 
 /**
  * Registers H2 aliases to mimic SQL Server-specific functions/procedures when
- * running with the in-memory H2 database (local/test). Em produção, este
- * runner fica desabilitado via propriedade.
+ * running with the in-memory H2 database (local/test). In production, this
+ * runner is disabled via property.
  */
 @Configuration
 @Profile("h2")
@@ -31,7 +31,7 @@ public class H2InitConfig {
     CommandLineRunner registerH2Aliases() {
         return args -> {
             try (Connection conn = dataSource.getConnection()) {
-                // Somente registra aliases quando a conexão for H2.
+                // Only register aliases when connection is H2.
                 String url = conn.getMetaData() != null ? conn.getMetaData().getURL() : null;
                 if (url == null || !url.startsWith("jdbc:h2")) {
                     return;
