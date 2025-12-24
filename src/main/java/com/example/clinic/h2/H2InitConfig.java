@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
  * Registers H2 aliases to mimic SQL Server-specific functions/procedures when
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
  * runner fica desabilitado via propriedade.
  */
 @Configuration
+@Profile("h2")
 @ConditionalOnProperty(name = "app.h2.aliases.enabled", havingValue = "true", matchIfMissing = false)
 public class H2InitConfig {
 
