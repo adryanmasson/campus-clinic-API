@@ -1,0 +1,62 @@
+name: Auto stop idle Web App
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: clinic-api-app
+  AZURE_RESOURCE_GROUP: clinic-api-resources
+  AZURE_SUBSCRIPTION_ID: 6e30585e-39d7-4593-9c1f-2b09017704a1
+
+jobs:
+  stop-if-idle:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Stop Web App if no requests in last 3 minutes
+        shell: pwsh
+        run: |
+          $resourceId = "/subscriptions/$env:AZURE_SUBSCRIPTION_ID/resourceGroups/$env:AZURE_RESOURCE_GROUP/providers/Microsoft.Web/sites/$env:AZURE_WEBAPP_NAME"
+          $metricsJson = az monitor metrics list `
+            --resource $resourceId `
+            --metric Requests `
+            --interval PT1M `
+            --aggregation Total `
+            --timespan PT5M `
+            --output json
+
+          if (-not $metricsJson) {
+            Write-Output "No metrics returned; skipping stop."
+            exit 0
+          }
+
+          $metrics = $metricsJson | ConvertFrom-Json
+          if (-not $metrics.value -or -not $metrics.value[0].timeseries -or -not $metrics.value[0].timeseries[0].data) {
+            Write-Output "Metrics structure empty; skipping stop."
+            exit 0
+          }
+
+          $data = $metrics.value[0].timeseries[0].data | Sort-Object timeStamp -Descending | Select-Object -First 3
+          if (-not $data -or $data.Count -eq 0) {
+            Write-Output "No datapoints to evaluate; skipping stop."
+            exit 0
+          }
+
+          $recentTotal = ($data | ForEach-Object { if ($_.total) { $_.total } else { 0 } } | Measure-Object -Sum).Sum
+
+          if ($recentTotal -eq 0) {
+            Write-Output "Idle (0 requests in last 3 minutes); stopping Web App..."
+            az webapp stop --resource-group $env:AZURE_RESOURCE_GROUP --name $env:AZURE_WEBAPP_NAME
+          } else {
+            Write-Output "Activity detected ($recentTotal requests in last 3 minutes); keeping Web App running."
+          }
