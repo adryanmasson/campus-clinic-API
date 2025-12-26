@@ -119,7 +119,7 @@ Complete management system for medical clinics, developed with **Spring Boot** a
 
 ### Base URL
 ```
-https://clinic-api-app-b0g9f5faczgjcde8.brazilsouth-01.azurewebsites.net
+https://clinic-api-app.azurewebsites.net
 ```
 
 All endpoints are prefixed with `/api` automatically via `spring.mvc.servlet.path=/api` configured in application.properties.
@@ -968,66 +968,6 @@ campus-clinic-api/
 ├── pom.xml                                        # Maven dependencies
 ├── .gitignore                                     # Git ignore rules
 └── README.md                                      # This file
-```
-
----
-│   ├── main/
-│   │   ├── java/com/example/clinic/
-│   │   │   ├── controllers/          # REST endpoints (@RestController)
-│   │   │   │   ├── SpecialtyController.java       # GET/POST/PUT/DELETE specialties
-│   │   │   │   ├── DoctorController.java          # Doctor management
-│   │   │   │   ├── PatientController.java         # Patient management
-│   │   │   │   ├── AppointmentController.java     # Appointment scheduling
-│   │   │   │   └── MedicalRecordController.java   # Medical records
-│   │   │   ├── models/               # JPA entities (@Entity)
-│   │   │   │   ├── Specialty.java
-│   │   │   │   ├── Doctor.java
-│   │   │   │   ├── Patient.java
-│   │   │   │   ├── Appointment.java
-│   │   │   │   ├── MedicalRecord.java
-│   │   │   │   ├── AppointmentStatus.java         # Enum
-│   │   │   │   ├── Gender.java                    # Enum
-│   │   │   │   └── GenderConverter.java           # JPA converter
-│   │   │   ├── repositories/         # Data access layer (JpaRepository)
-│   │   │   │   ├── SpecialtyRepository.java
-│   │   │   │   ├── DoctorRepository.java
-│   │   │   │   ├── PatientRepository.java
-│   │   │   │   ├── AppointmentRepository.java
-│   │   │   │   ├── MedicalRecordRepository.java
-│   │   │   │   └── AppointmentDetailProjection.java
-│   │   │   ├── services/             # Business logic (@Service)
-│   │   │   │   ├── SpecialtyService.java
-│   │   │   │   ├── DoctorService.java
-│   │   │   │   ├── PatientService.java
-│   │   │   │   ├── AppointmentService.java
-│   │   │   │   └── MedicalRecordService.java
-│   │   │   ├── dto/                  # Data transfer objects
-│   │   │   │   ├── ApiResponse.java              # Standard response wrapper
-│   │   │   │   ├── AppointmentDTO.java
-│   │   │   │   ├── AgendarConsultaDTO.java
-│   │   │   │   ├── AtualizarConsultaDTO.java
-│   │   │   │   └── ... (other DTOs)
-│   │   │   ├── exceptions/           # Exception handlers (@ControllerAdvice)
-│   │   │   │   ├── RestExceptionHandler.java     # Centralized error handling
-│   │   │   │   ├── DuplicateResourceException.java
-│   │   │   │   ├── AppointmentConflictException.java
-│   │   │   │   └── BusinessRuleException.java
-│   │   │   ├── h2/                   # H2 database support (testing)
-│   │   │   ├── SecurityConfig.java   # Spring Security configuration
-│   │   │   ├── WebConfig.java        # CORS configuration
-│   │   │   └── ClinicApplication.java # Main Spring Boot class
-│   │   └── resources/
-│   │       └── application.properties # Database & JPA config
-│   └── test/                         # Unit tests
-├── .github/workflows/
-│   └── clinic-api-deploy.yml         # GitHub Actions CI/CD
-├── Dockerfile                        # Multi-stage Docker build
-├── docker-compose.yml                # Docker Compose for local development
-├── campus_clinic_schema.sql          # SQL Server database schema
-├── sample_data_english.sql           # Sample test data
-├── test-docker.ps1                   # PowerShell test automation script
-├── pom.xml                           # Maven dependencies & build config
-└── README.md                         # This file
 ```
 
 ## 🧪 Automated Testing with Docker
